@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机点名程序</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+            left: 100px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mainContainer" style="text-align: center;">
+        <h1>随机点名程序</h1>
+        <!-- 文件上传区域 -->
+        <input type="file" id="fileInput" accept=".txt">
+        <!-- 显示选中文件名 -->
+        <p id="fileNameDisplay"></p>
+        <!-- 随机点名按钮 -->
+        <button id="randomButton" disabled>开始随机点名</button>
+        <!-- 显示点名结果 -->
+        <p id="resultDisplay"></p>
+    </div>
+    <script>
+        // 获取页面元素
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const randomButton = document.getElementById('randomButton');
+        const resultDisplay = document.getElementById('resultDisplay');
+        const mainContainer = document.getElementById('mainContainer');
+
+        // 当文件选择改变时的处理函数
+        fileInput.addEventListener('change', function () {
+            const file = fileInput.files[0];
+            if (file) {
+                // 显示选中的文件名
+                fileNameDisplay.textContent = `已选中文件: ${file.name}`;
+                // 启用随机点名按钮
+                randomButton.disabled = false;
+            }
+        });
+
+        // 随机点名按钮的点击处理函数
+        randomButton.addEventListener('click', function () {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                if (file.name.endsWith('.txt')) {
+                    // 处理TXT文件
+                    reader.onload = function (e) {
+                        const content = e.target.result;
+                        const lines = content.split('\n');
+                        const randomIndex = Math.floor(Math.random() * lines.length);
+                        const selectedName = lines[randomIndex].trim();
+                        resultDisplay.textContent = ` ${selectedName}`;
+                    };
+                    reader.readAsText(file);
+                } else if (file.name.endsWith('.xlsx')) {
+                    // 处理XLSX文件（这里需要引入xlsx库，可通过CDN引入）
+                    reader.onload = function (e) {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const sheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[sheetName];
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                        const names = jsonData.map(item => item[Object.keys(item)[0]]);
+                        const randomIndex = Math.floor(Math.random() * names.length);
+                        const selectedName = names[randomIndex];
+                        resultDisplay.textContent = `点名结果: ${selectedName}`;
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
