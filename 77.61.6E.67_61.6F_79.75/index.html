@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>今晚，整片星空将为你一人闪烁</title>
+    <style>
+        .responsive-button {
+            width: 100%;
+            /* 让按钮宽度占满父元素（一般是body或者它所在的容器元素）宽度 */
+            height: auto;
+            /* 高度根据图片原始比例自适应调整 */
+            padding: 0;
+            /* 去除按钮默认的内边距，避免影响图片显示和布局 */
+            border: none;
+            /* 去除按钮默认边框，可根据实际需求决定是否保留 */
+            background-color: transparent;
+            /* 让按钮背景透明，仅显示图片内容 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            /* 设置一个较高的z-index值，确保它在其他元素之上显示 */
+            width: 100%;
+            /* 让按钮宽度占满父元素（一般是body或者它所在的容器元素）宽度 */
+            height: auto;
+            /* 高度根据图片原始比例自适应调整 */
+            padding: 0;
+            /* 去除按钮默认的内边距，避免影响图片显示和布局 */
+            border: none;
+            /* 去除按钮默认边框，可根据实际需求决定是否保留 */
+            background-color: transparent;
+            /* 让按钮背景透明，仅显示图片内容 */
+        }
+
+        .responsive-button img {
+            width: 100%;
+            /* 让图片宽度占满按钮宽度 */
+            height: auto;
+            /* 高度根据图片原始比例自适应调整，保证图片不变形 */
+            display: block;
+            /* 将图片设置为块级元素，去除图片底部默认的空白间隙（因为图片是行内块元素时会有这个问题） */
+            width: 100%;
+            /* 让图片宽度占满按钮宽度 */
+            height: auto;
+            /* 高度根据图片原始比例自适应调整，保证图片不变形 */
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="./myweb/css/skystar.css">
+</head>
+
+<body>
+    <video id="videofilm" poster="./myweb/img/skystar2.jpg" autoplay loop>
+        <source src="./myweb/video/skystar.mp4" type="video/mp4">
+    </video>
+    <div class="textone">
+        <h1>look at the stars</h1>
+    </div>
+    <div class="texttwo">
+        <h1>look how they shine for u</h1>
+    </div>
+    <div class="textthree">
+        <h1></h1>
+    </div>
+    <audio id="myAudio" src="./myweb/video/晴天.mp3" muted></audio>
+    <script>
+        window.onload = function () {
+            const audio = document.getElementById('myAudio');
+            // 等待用户交互，例如点击页面
+            document.addEventListener('click', function () {
+                audio.muted = false;
+                audio.play();
+            });
+        };
+    </script>
+
+    <div class="container"></div>
+    <script src="js/skystar.js"></script>
+
+    <button id="playVideoButton" class="responsive-button" onclick="this.style.display = 'none';"><img
+            src="./myweb/video/01.png"></button>
+    <script>
+        window.onload = function () {
+            const video = document.getElementById('videofilm');
+            const playVideoButton = document.getElementById('playVideoButton');
+            playVideoButton.addEventListener('click', function () {
+                video.muted = false;
+                video.play();
+            });
+        };
+    </script>
+
+
+
+</body>
+
+</html>
