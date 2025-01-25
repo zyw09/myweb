@@ -1,7 +1,7 @@
 [
   {
     "name": "我记得",
-    "audio_url": "./audios/我记得.mp3",
+    "audio_url": "https://raw.githubusercontent.com/zyw09/myweb/refs/heads/main/01/audios/%E5%8D%97%E6%96%B9%E5%A7%91%E5%A8%98.mp3",
     "singer": "赵雷",
     "album": "署前街少年",
     "cover": "./photo/我记得.jpg",
