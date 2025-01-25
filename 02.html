@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>判断设备类型</title>
+</head>
+
+<body>
+    <script>
+        function isMobile() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            // 常见的移动设备关键字
+            const mobileKeywords = ['android', 'iphone', 'ipad', 'ipod', 'windows phone'];
+            for (let i = 0; i < mobileKeywords.length; i++) {
+                if (userAgent.indexOf(mobileKeywords[i]) !== -1) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        if (isMobile()) {
+            console.log('用户使用的是手机端');
+        } else {
+            console.log('用户使用的是 PC 端');
+        }
+    </script>
+</body>
+
+</html>
