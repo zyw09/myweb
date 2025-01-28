@@ -134,7 +134,7 @@
             const name = urlParams.get('name');
             let multiLineText = "";
             if (name != "你" && name != null) {
-                multiLineText = `Yi在2025年${name}
+                multiLineText = `Yi在2025年祝${name}
 去岁千般皆如愿
 年万事定称心今
 
@@ -163,17 +163,18 @@
 所遇皆美好
 所得皆所愿
 `;
-                /*const image = document.getElementById('fullscreen-image');
-                setTimeout(() => {
-                    image.style.display = 'block';
-                    if (image.requestFullscreen) {
-                        image.requestFullscreen();
-                    } else if (image.webkitRequestFullscreen) {
-                        image.webkitRequestFullscreen();
-                    } else if (image.msRequestFullscreen) {
-                        image.msRequestFullscreen();
-                    }
-                }, 34000);*/
+                if(name="王行"){
+                    const image = document.getElementById('fullscreen-image');
+                    setTimeout(() => {
+                        image.style.display = 'block';
+                        if (image.requestFullscreen) {
+                            image.requestFullscreen();
+                        } else if (image.webkitRequestFullscreen) {
+                            image.webkitRequestFullscreen();
+                        } else if (image.msRequestFullscreen) {
+                            image.msRequestFullscreen();
+                        }
+                    }, 34000);}
             } else {
                 multiLineText = `在2025年
 愿${name}的生活如春日暖阳
