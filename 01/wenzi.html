@@ -44,6 +44,18 @@
     <img id="fullscreen-image" src="./1.jpg" alt="Fullscreen Image">
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            if (name) {
+                console.log(name);
+            }
+            var multiLineText = "";
+
+            const container = document.getElementById('text-container');
+            if (isMobile()) {
+                console.log(windowWidth);
+
+        
         let displayChars = null;
         function adjustFontSize() {
             const windowWidth = window.innerWidth;
@@ -62,16 +74,7 @@
 
 
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get('name');
-            if (name) {
-                console.log(name);
-            }
-            var multiLineText = "";
-
-            const container = document.getElementById('text-container');
-            if (isMobile()) {
-                console.log(windowWidth);
+            
 
 
 
