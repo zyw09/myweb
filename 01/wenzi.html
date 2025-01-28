@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新年快乐</title>
+    <title></title>
     <style>
         body {
             display: flex;
@@ -44,18 +44,6 @@
     <img id="fullscreen-image" src="./1.jpg" alt="Fullscreen Image">
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get('name');
-            if (name) {
-                console.log(name);
-            }
-            var multiLineText = "";
-
-            const container = document.getElementById('text-container');
-            if (isMobile()) {
-                console.log(windowWidth);
-
-        
         let displayChars = null;
         function adjustFontSize() {
             const windowWidth = window.innerWidth;
@@ -74,7 +62,16 @@
 
 
 
-            
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            if (name) {
+                console.log(name);
+            }
+            var multiLineText = "";
+
+            const container = document.getElementById('text-container');
+            if (isMobile()) {
+                console.log(windowWidth);
 
 
 
@@ -100,7 +97,7 @@
                     fontSize = 60;
                 }
                 container.style.fontSize = fontSize + 'px';
-             else {
+            } else {
                 console.log(windowWidth);
                 if (windowWidth <= 90) {
                     fontSize = 3;
@@ -123,9 +120,9 @@
                 } else if (windowWidth <= 375) {
                     fontSize = 12;
                 } else if (windowWidth <= 712) {
-                    fontSize = 15;
-                } else if (windowWidth <= 1432) {
-                    fontSize = 25;
+                    fontSize = 20;
+                } else if (windowWidth <= 1424) {
+                    fontSize = 35;
                 } else {
                     fontSize = 70;
                 }
@@ -166,7 +163,7 @@
 所遇皆美好
 所得皆所愿
 `;
-                if(name="王行"){
+                if (name == "王行") {
                     const image = document.getElementById('fullscreen-image');
                     setTimeout(() => {
                         image.style.display = 'block';
@@ -177,7 +174,8 @@
                         } else if (image.msRequestFullscreen) {
                             image.msRequestFullscreen();
                         }
-                    }, 34000);}
+                    }, 34000);
+                }
             } else {
                 multiLineText = `在2025年
 愿${name}的生活如春日暖阳
