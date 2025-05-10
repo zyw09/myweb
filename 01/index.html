@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>智能刷题系统</title>
+    <style>
+        :root {
+            --color-primary: #007bff;
+            --color-success: #28a745;
+            --color-danger: #dc3545;
+            --border-radius: 0.75rem;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 1rem;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        /* 控制按钮组 */
+        .panel-controls {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 1001;
+        }
+
+        /* 通用按钮样式 */
+        button {
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: clamp(0.875rem, 2.5vw, 1rem);
+        }
+
+        .toggle-panel-btn {
+            background: var(--color-success);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        /* 菜单系统 */
+        .menu-container {
+            max-width: min(800px, 90vw);
+            margin: 0 auto 1rem;
+        }
+
+        .toggle-menu {
+            width: 100%;
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .menu {
+            display: none;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border-radius: var(--border-radius);
+            background: white;
+            box-shadow: var(--shadow);
+            grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr));
+        }
+
+        .menu.show {
+            display: grid;
+        }
+
+        .menu-btn {
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: calc(var(--border-radius) - 0.25rem);
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+        }
+
+        .menu-btn.correct {
+            background: #e8f5eb;
+            border-color: #c3e6cb;
+        }
+
+        .menu-btn.wrong {
+            background: #fce8e9;
+            border-color: #f5c6cb;
+        }
+
+        /* 题目容器 */
+        .question-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 0 auto 1rem;
+            max-width: min(800px, 90vw);
+            box-shadow: var(--shadow);
+        }
+
+        #question {
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+            color: #2d3748;
+        }
+
+        /* 选项按钮 */
+        .options button {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            text-align: left;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: calc(var(--border-radius) - 0.25rem);
+            font-size: clamp(0.9rem, 3vw, 1rem);
+        }
+
+        .options button.correct {
+            background: #e8f5eb !important;
+            border-color: #c3e6cb !important;
+        }
+
+        .options button.wrong {
+            background: #fce8e9 !important;
+            border-color: #f5c6cb !important;
+        }
+
+        /* 解析说明 */
+        .explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #edf2f7;
+            border-radius: calc(var(--border-radius) - 0.25rem);
+            font-size: clamp(0.875rem, 3vw, 0.95rem);
+            line-height: 1.6;
+        }
+
+        /* 导航按钮 */
+        .navigation {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin: 1.5rem auto 0;
+            max-width: min(800px, 90vw);
+        }
+
+        .navigation button {
+            flex: 1;
+            max-width: 200px;
+            background: var(--color-primary);
+            color: white;
+        }
+
+        /* 错题面板 */
+        .wrong-questions-panel {
+            position: fixed;
+            right: -100%;
+            top: 0;
+            width: min(360px, 90vw);
+            height: 100dvh;
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 1.25rem;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .wrong-questions-panel.show {
+            right: 0;
+        }
+
+        /* 修正后的面板头部样式 */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 1rem;
+        }
+
+        .panel-header>div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .clear-btn {
+            background: var(--color-danger);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            white-space: nowrap;
+        }
+
+        .close-panel-btn {
+            background: #f8f9fa;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-panel-btn:hover {
+            background: #e9ecef;
+        }
+
+        .wrong-list {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .wrong-item {
+            padding: 1rem;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: calc(var(--border-radius) - 0.25rem);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .wrong-item small {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.875em;
+            color: #4a5568;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 640px) {
+            .navigation {
+                flex-direction: column;
+            }
+
+            .navigation button {
+                max-width: 100%;
+            }
+
+            .wrong-questions-panel {
+                width: 85vw;
+                padding: 1rem;
+            }
+
+            .question-container {
+                padding: 1.25rem;
+            }
+
+            .panel-header {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .panel-header h3 {
+                width: 100%;
+            }
+
+            .clear-btn {
+                font-size: 0.875em;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .close-panel-btn {
+                width: 1.75rem;
+                height: 1.75rem;
+            }
+        }
+
+        @media (hover: hover) {
+            button:hover {
+                filter: brightness(0.95);
+                transform: translateY(-1px);
+            }
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel-controls">
+        <button class="toggle-panel-btn" onclick="toggleWrongPanel()">错题集</button>
+    </div>
+
+    <div class="wrong-questions-panel" id="wrongPanel">
+        <div class="panel-header">
+            <h3>错题集（<span id="wrongCount">0</span>）</h3>
+            <div>
+                <button class="clear-btn" onclick="clearWrongQuestions()">清空</button>
+                <button class="close-panel-btn" onclick="toggleWrongPanel()">&times;</button>
+            </div>
+        </div>
+        <ul class="wrong-list" id="wrongList"></ul>
+    </div>
+
+    <div class="menu-container">
+        <button class="toggle-menu" onclick="toggleMenu()">题目导航</button>
+        <div class="menu" id="questionMenu"></div>
+    </div>
+
+    <div class="question-container">
+        <h2 id=question></h2>
+        <div class=options id=options></div>
+        <div class=explanation id=explanation></div>
+    </div>
+
+    <div class="navigation">
+        <button onclick="previousQuestion()">上一题</button>
+        <button onclick="nextQuestion()">下一题</button>
+    </div>
+
+    <script>
+
+        alert("答案和解析均由AI生成，有错误答案请谅解");
+        // 题库数据
+        const questions = [
+            {
+                question: "将CAD和CAM技术集成，实现工业设计和生产的自动化，这种技术被称为()。",
+                options: ["A. MIPS", "B. IMCS", "C. CIMS", "D. S"],
+                answer: 2,
+                explanation: "CIMS（计算机集成制造系统）通过集成CAD（计算机辅助设计）和CAM（计算机辅助制造），实现设计到生产的全流程自动化。"
+            },
+            {
+                question: "下列关于数据与信息之间关系的描述中，不正确的是()。",
+                options: ["A.数据只有经过处理和解释，并赋予一定的意义后才成为信息", "B.并不是所有的数据都能够表示信息", "C.信息与数据都随载荷它们的物理介质改变而变化", "D.数据和信息都是可以传播的"],
+                answer: 2,
+                explanation: "信息的内容不随物理介质改变而变化（例如同一段文字存储在U盘或硬盘中，信息内容不变），因此选项C错误。"
+            },
+            {
+                question: "信息的传播需要媒体，目前被称为第四媒体的是()。",
+                options: ["A.报纸", "B.网络", "C.广播", "D.电视"],
+                answer: 1,
+                explanation: "第四媒体指基于互联网的传播媒介（如网站、社交媒体），区别于传统三大媒体（报纸、广播、电视）。"
+            },
+            {
+                question: "Win10中OneDrive提供的免费存储空间是()。",
+                options: ["A. 5GB", "B. 500GB", "C. 100GB", "D. 200GB"],
+                answer: 0,
+                explanation: "OneDrive基础免费存储空间为5GB，用户可通过订阅扩展容量。"
+            },
+            {
+                question: "下面选项中()不是常见的流媒体应用。",
+                options: ["A.在线直播", "B.网络电台", "C.视频会议", "D.文件传输"],
+                answer: 3,
+                explanation: "流媒体是实时传输音视频数据（如直播、会议），文件传输需完整下载文件，不属于流媒体。"
+            },
+            {
+                question: "目前用于战略武器设计、空间技术等领域的计算机属于()。",
+                options: ["A.大型机", "B.巨型机", "C.小型机", "D.工作站"],
+                answer: 1,
+                explanation: "巨型机（超级计算机）专用于大规模科学计算，如气象模拟、武器设计等。"
+            },
+            {
+                question: "关于计算机发展方向，不正确的一项是()。",
+                options: ["A.网络化发展迅速", "B.微电子技术推动巨型化", "C.人工智能是发展方向", "D.量子计算机研究解决能耗问题"],
+                answer: 1,
+                explanation: "微电子技术使计算机更微型化（如手机、嵌入式设备），而非巨型化。"
+            },
+            {
+                question: "关于汉字编码、图形与图像、音频的叙述中，正确的是()。",
+                options: ["A.常用汉字在GB系列标准中的内码相同", "B.图像比图形更易编辑", "C.MP3采用MPEG-3标准", "D.计算机不能生成真实景物图像"],
+                answer: 0,
+                explanation: "GB2312、GBK、GB18030的内码兼容，同一汉字内码一致；图形由矢量构成更易编辑；MP3使用MPEG-1 Layer 3；计算机可生成真实感图像（如3D渲染）。"
+            },
+            {
+                question: "在十二进制整数右边添加一个零，这个数()。",
+                options: ["A.扩大2倍", "B.缩小2倍", "C.扩大12倍", "D.缩小12倍"],
+                answer: 2,
+                explanation: "N进制数末位添零相当于乘以N。十二进制添零后扩大12倍。"
+            },
+            {
+                question: "异构计算技术主要涉及的处理器有()。",
+                options: ["A.CPU和GPU", "B.CPU和FPGA", "C.CPU、GPU、FPGA", "D.CPU、GPU、FPGA、ASIC"],
+                answer: 3,
+                explanation: "异构计算整合多种处理器（如CPU通用计算、GPU并行计算、FPGA可编程硬件、ASIC专用芯片）以提升效率。"
+            },
+            {
+                question: "对运行速度有高要求的程序，建议采用()。",
+                options: ["A. Visual Basic", "B.机器语言", "C.C语言", "D.HTML语言"],
+                answer: 1,
+                explanation: "机器语言直接由二进制指令构成，无需编译或解释，执行速度最快。"
+            },
+            {
+                question: "个人计算机（PC）诞生于()阶段。",
+                options: ["A.第一代", "B.第二代", "C.第三代", "D.第四代"],
+                answer: 3,
+                explanation: "第四代计算机（1971年后）使用大规模集成电路，PC（如IBM PC 1981年）在此阶段出现。"
+            },
+            {
+                question: "华为信创一体机采用的核心技术是()。",
+                options: ["A.分布式技术", "B.虚拟化技术", "C.云计算技术", "D.人工智能技术"],
+                answer: 0,
+                explanation: "华为信创一体机基于分布式架构，整合计算、存储、网络资源。"
+            },
+            {
+                question: "黑客设置“后门”的目的是()。",
+                options: ["A.篡改数据", "B.窃取信息", "C.盗用资源", "D.非法获取系统访问权限"],
+                answer: 3,
+                explanation: "后门是绕过正常认证的隐蔽入口，用于未授权访问系统。"
+            },
+            {
+                question: "16位原码能表示的最小十进制整数是()。",
+                options: ["A.-32768", "B.-32767", "C.-65535", "D.-65536"],
+                answer: 1,
+                explanation: "16位原码范围：-32767~32767（原码中0有+0和-0两种表示，最小负数为-32767）。"
+            },
+            {
+                question: "防范DoS攻击是提高网络信息()的措施。",
+                options: ["A.可用性", "B.真实性", "C.保密性", "D.完整性"],
+                answer: 0,
+                explanation: "DoS（拒绝服务攻击）通过耗尽资源使服务不可用，防范它保障可用性。"
+            },
+            {
+                question: "关于计算机发展的错误叙述是()。",
+                options: ["A.第三阶段使用中小规模集成电路", "B.内存从未使用磁盘", "C.操作系统出现在高级语言后", "D.人工智能于1956年提出"],
+                answer: 2,
+                explanation: "操作系统（如UNIX）出现在高级语言（如FORTRAN）之后是错误的，实际操作系统发展晚于早期高级语言。"
+            },
+            {
+                question: "32位计算机4GB内存按字编址，逻辑存储单元数为()。",
+                options: ["A.2^30", "B.2^29", "C.2^28", "D.2^32"],
+                answer: 0,
+                explanation: "字长32位=4字节，4GB=4×2^30字节，按字编址单元数=4×2^30 /4=2^30。"
+            },
+            {
+                question: "著作权人权利不包括()。",
+                options: ["A.署名权", "B.发表权", "C.修改权", "D.继承权"],
+                answer: 3,
+                explanation: "继承权是物权范畴，著作权含发表权、署名权、修改权、保护作品完整权等。"
+            },
+            {
+                question: "网络安全服务不包括()。",
+                options: ["A.数据保密", "B.访问控制", "C.语义正确性检查", "D.身份认证"],
+                answer: 2,
+                explanation: "安全服务关注机密性、完整性、可用性等，语义正确性属于应用层逻辑，非安全服务。"
+            },
+            {
+                question: "属于社会工程学攻击的是()。",
+                options: ["A.网络钓鱼", "B.挂马", "C.摆渡", "D.系统漏洞"],
+                answer: 0,
+                explanation: "社会工程学利用人性弱点（如伪装邮件骗取信息），网络钓鱼是典型手段。"
+            },
+            {
+                question: "128位显卡的“位”指()。",
+                options: ["A.显存位宽", "B.显示芯片位数", "C.显卡带宽", "D.传输线数"],
+                answer: 0,
+                explanation: "显存位宽指显存与GPU间的数据传输位数，位宽越大带宽越高（带宽=位宽×频率）。"
+            },
+            {
+                question: "内存存取时间单位是()。",
+                options: ["A.毫秒", "B.纳米", "C.纳秒", "D.微秒"],
+                answer: 2,
+                explanation: "现代内存存取时间通常在纳秒级（1ns=10^-9秒），如DDR4延迟约15ns。"
+            },
+
+            {
+                question: "下列叙述中，不正确的是()。",
+                options: ["A.系统软件是计算机正常运行不可缺少的", "B.应用软件要在系统软件平台的支撑下才能运行", "C.应用软件是为了解决某些特定的实际问题而编制的程序", "D.未安装应用软件的计算机不能做任何有意义的工作"],
+                answer: 3,
+                explanation: "未安装应用软件的计算机仍可通过系统软件（如操作系统）执行基础任务，例如启动、硬件管理等。"
+            },
+            {
+                question: "目前主流内存条DDR4的金手指是()线。",
+                options: ["A.240", "B.284", "C.168", "D.72"],
+                answer: 1,
+                explanation: "DDR4内存条的金手指采用284线设计，相比DDR3的240线增加了引脚以支持更高带宽。"
+            },
+            {
+                question: "以下关于VPN说法正确的是()。",
+                options: ["A.VPN是用户租用物理隔离的专用线路", "B.VPN通过公用网络建立逻辑隔离的安全连接", "C.VPN不能做信息认证", "D.VPN只能认证不能加密"],
+                answer: 1,
+                explanation: "VPN（虚拟专用网络）通过加密和隧道技术在公共网络上建立逻辑隔离的临时安全连接，兼具认证和加密功能。"
+            },
+            {
+                question: "最常用的认证方式是()。",
+                options: ["A.基于账户名/口令认证", "B.基于摘要算法认证", "C.基于PKI认证", "D.基于数据库认证"],
+                answer: 0,
+                explanation: "账户名/口令认证因简单易用成为最常见的认证方式，其他方式安全性更高但应用场景较特定。"
+            },
+            {
+                question: "系统间高质量大量数据传输常采用的交换方式是()。",
+                options: ["A.电路交换", "B.虚电路方式", "C.报文交换", "D.数据报"],
+                answer: 1,
+                explanation: "虚电路在分组交换中预先建立逻辑连接，保证数据有序传输，适合高质量大数据量场景。"
+            },
+            {
+                question: "不属于硬盘接口标准的是()。",
+                options: ["A.IDE接口", "B.EE1394接口", "C.SATA接口", "D.VGA接口"],
+                answer: 3,
+                explanation: "VGA是视频接口，硬盘接口标准包括IDE、SATA、SCSI等，EE1394（FireWire）也可用于外接存储。"
+            },
+            {
+                question: "数字信号的优点不包括()。",
+                options: ["A.抗干扰能力强", "B.易实现检错纠错", "C.传输频带较宽", "D.放大后无噪声积累"],
+                answer: 2,
+                explanation: "数字信号需要较高带宽（如数字视频需压缩），频带要求是缺点，其他选项均为优点。"
+            },
+            {
+                question: "IP地址10.110.9.113/21的广播地址是()。",
+                options: ["A.10.110.9.255", "B.10.110.15.255", "C.10.110.255.255", "D.10.255.255.255"],
+                answer: 1,
+                explanation: "/21掩码为255.255.248.0，网络地址10.110.8.0，广播地址为10.110.15.255。"
+            },
+            {
+                question: "关于解释程序和编译程序的叙述，正确的是()。",
+                options: ["A.只有编译程序生成目标程序", "B.只有解释程序生成目标程序", "C.两者均生成目标程序", "D.两者均不生成目标程序"],
+                answer: 0,
+                explanation: "编译程序将源代码转换为目标程序（如.exe文件），解释程序逐行执行代码且不生成目标文件。"
+            },
+            {
+                question: "关于计算机网络结构的错误叙述是()。",
+                options: ["A.总线结构节点故障不会导致崩溃", "B.星型结构一般节点故障不影响系统", "C.星型结构中央节点故障不影响系统", "D.环型结构任一节点故障导致崩溃"],
+                answer: 2,
+                explanation: "星型结构的中央节点故障会导致整个网络瘫痪，其他节点故障不影响其他部分。"
+            },
+            {
+                question: "不属于资源子网的是()。",
+                options: ["A.工作站", "B.服务器", "C.打印机", "D.双绞线"],
+                answer: 3,
+                explanation: "双绞线属于通信子网的传输介质，资源子网包括计算机、外设等资源提供者。"
+            },
+            {
+                question: "评定主板性能首先要看()。",
+                options: ["A.CPU", "B.主板芯片组", "C.主板结构", "D.BIOS芯片"],
+                answer: 1,
+                explanation: "主板芯片组决定支持的硬件类型、总线速度等核心功能，是主板性能的关键。"
+            },
+            {
+                question: "对象间通信机制是()。",
+                options: ["A.对象", "B.类", "C.消息", "D.接口"],
+                answer: 2,
+                explanation: "面向对象中，对象通过发送消息（调用方法）与其他对象交互。"
+            },
+            {
+                question: "衡量打印机好坏的指标不包括()。",
+                options: ["A.打印分辨率", "B.打印速度", "C.噪声", "D.显示分辨率"],
+                answer: 3,
+                explanation: "显示分辨率是显示器参数，与打印机无关。"
+            },
+            {
+                question: "近距离无线通信技术标准是()。",
+                options: ["A.红外", "B.蓝牙", "C.微波", "D.FDDI"],
+                answer: 1,
+                explanation: "蓝牙适用于短距离（10m内）设备通信，如耳机、键盘等。"
+            },
+            {
+                question: "手机通过无线路由器上网需打开()。",
+                options: ["A.GPS", "B.WLAN", "C.蓝牙", "D.热点"],
+                answer: 1,
+                explanation: "WLAN（无线局域网）功能用于连接Wi-Fi路由器，其他选项用途不同。"
+            },
+            {
+                question: "用同型号网卡替换检测故障的方法称为()。",
+                options: ["A.清洁法", "B.替换法", "C.比较法", "D.插拔法"],
+                answer: 1,
+                explanation: "替换法通过更换疑似故障部件快速定位问题。"
+            },
+            {
+                question: "CPU访问存储系统的地址是()。",
+                options: ["A.高速缓存地址", "B.虚拟地址", "C.主存物理地址", "D.磁盘地址"],
+                answer: 2,
+                explanation: "CPU直接访问主存时使用物理地址，虚拟地址需经内存管理单元转换。"
+            },
+            {
+                question: "主板跳线RESETSW的含义是()。",
+                options: ["A.速度指示灯", "B.复位键开关", "C.电源开关", "D.电源指示灯"],
+                answer: 1,
+                explanation: "RESETSW连接机箱复位按钮，用于重启计算机。"
+            },
+            {
+                question: "某一时刻单向传输的通信方式是()。",
+                options: ["A.单工", "B.半双工", "C.全双工", "D.自动"],
+                answer: 1,
+                explanation: "半双工允许双向通信但不能同时进行（如对讲机）。"
+            },
+            {
+                question: "磁头等待数据块转到下方的时间称为()。",
+                options: ["A.平均潜伏时间", "B.平均寻道时间", "C.平均访问时间", "D.以上都不是"],
+                answer: 0,
+                explanation: "潜伏时间指磁头定位磁道后等待磁盘旋转到目标扇区的时间。"
+            },
+            {
+                question: "补充软件功能的维护属于()。",
+                options: ["A.功能性", "B.扩展性", "C.合法性", "D.完善性"],
+                answer: 3,
+                explanation: "完善性维护旨在提升性能或扩展功能，非修正错误（功能性）或适应环境（适应性）。"
+            },
+            {
+                question: "流媒体特点不包括()。",
+                options: ["A.启动延时短", "B.使用实时传输协议", "C.降低缓存需求", "D.传输占用大量空间"],
+                answer: 3,
+                explanation: "流媒体通过边传边播减少存储占用，D描述的是传统下载方式的特点。"
+            },
+            {
+                question: "新型教育手段采用的技术是()。",
+                options: ["A.增强现实", "B.虚拟现实", "C.混合现实", "D.模拟现实"],
+                answer: 1,
+                explanation: "虚拟现实（VR）创建沉浸式学习环境，帮助学生通过交互增强体验。"
+            },
+            {
+                question: "VCD使用的压缩标准是()。",
+                options: ["A.JPEG", "B.MPEG-1", "C.MPEG-2", "D.MPEG-4"],
+                answer: 1,
+                explanation: "VCD采用MPEG-1编码，DVD使用MPEG-2。"
+            },
+            {
+                question: "模块划分应尽量做到()。",
+                options: ["A.高内聚高耦合", "B.高内聚低耦合", "C.低内聚高耦合", "D.低内聚低耦合"],
+                answer: 1,
+                explanation: "高内聚（模块功能单一）和低耦合（模块间依赖少）提高可维护性。"
+            },
+            {
+                question: "不属于云计算特点的是()。",
+                options: ["A.超大规模", "B.虚拟化", "C.私有化", "D.高可靠性"],
+                answer: 2,
+                explanation: "云计算核心特点包括按需服务、广泛网络访问、资源池化等，私有化是部署模式而非本质特征。"
+            }
+
+        ]
+
+
+
+            ;
+
+        let currentQuestion = 0;
+        let answered = false;
+        const userAnswers = [];
+        let wrongQuestions = JSON.parse(localStorage.getItem('wrongQuestions')) || [];
+
+        // 系统初始化
+        function init() {
+            const menu = document.getElementById('questionMenu');
+            questions.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'menu-btn';
+                btn.textContent = index + 1;
+                btn.onclick = () => {
+                    gotoQuestion(index);
+                    toggleMenu();
+                }
+                menu.appendChild(btn);
+            });
+            showQuestion(currentQuestion);
+            updateWrongPanel();
+            setupSwipe();
+        }
+
+        // 显示题目
+        function showQuestion(index) {
+            currentQuestion = index;
+            const q = questions[index];
+
+            document.getElementById('question').textContent = `第 ${index + 1} 题：${q.question}`;
+
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = q.options.map((option, i) => `
+                <button onclick="checkAnswer(${i})">${option}</button>
+            `).join('');
+
+            document.getElementById('explanation').textContent = '';
+            answered = false;
+            updateMenu();
+        }
+
+        // 检查答案
+        function checkAnswer(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestion];
+            const isCorrect = selectedIndex === q.answer;
+
+            // 更新答题状态
+            userAnswers[currentQuestion] = isCorrect;
+
+            // 处理错题逻辑
+            if (!isCorrect) {
+                if (!wrongQuestions.some(item => item.index === currentQuestion)) {
+                    wrongQuestions.push({
+                        index: currentQuestion,
+                        ...q,
+                        selected: selectedIndex,
+                        timestamp: Date.now()
+                    });
+                }
+            } else {
+                wrongQuestions = wrongQuestions.filter(item => item.index !== currentQuestion);
+            }
+
+            updateWrongPanel();
+            localStorage.setItem('wrongQuestions', JSON.stringify(wrongQuestions));
+
+            // 显示答案状态
+            document.querySelectorAll('#options button').forEach((btn, i) => {
+                btn.classList.toggle('correct', i === q.answer);
+                btn.classList.toggle('wrong', i === selectedIndex && !isCorrect);
+            });
+
+            document.getElementById('explanation').textContent = q.explanation;
+        }
+
+        // 错题集功能
+        function updateWrongPanel() {
+            const wrongList = document.getElementById('wrongList');
+            wrongList.innerHTML = wrongQuestions
+                .filter((item, index, self) =>
+                    self.findIndex(t => t.index === item.index) === index
+                )
+                .map(item => `
+                    <li class="wrong-item" onclick="gotoQuestion(${item.index}); toggleWrongPanel()">
+                        <div>第${item.index + 1}题</div>
+                        <small>${item.question}</small>
+                    </li>
+                `).join('');
+
+            document.getElementById('wrongCount').textContent = wrongList.children.length;
+        }
+
+        // 切换面板
+        function toggleWrongPanel() {
+            const panel = document.getElementById('wrongPanel');
+            panel.classList.toggle('show');
+            document.querySelector('.toggle-panel-btn').textContent =
+                panel.classList.contains('show') ? "关闭" : "打开";
+        }
+
+        // 清空错题
+        function clearWrongQuestions() {
+            if (confirm('确定要清空所有错题记录吗？')) {
+                wrongQuestions = [];
+                localStorage.removeItem('wrongQuestions');
+                updateWrongPanel();
+                updateMenu();
+            }
+        }
+
+        // 题目导航
+        function toggleMenu() {
+            document.getElementById('questionMenu').classList.toggle('show');
+        }
+
+        function gotoQuestion(index) {
+            if (index >= 0 && index < questions.length) {
+                currentQuestion = index;
+                showQuestion(index);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion < questions.length - 1 && showQuestion(currentQuestion + 1);
+        }
+
+        function previousQuestion() {
+            currentQuestion > 0 && showQuestion(currentQuestion - 1);
+        }
+
+        // 更新菜单状态
+        function updateMenu() {
+            document.querySelectorAll('.menu-btn').forEach((btn, index) => {
+                btn.classList.toggle('correct', userAnswers[index] === true);
+                btn.classList.toggle('wrong', userAnswers[index] === false);
+            });
+        }
+
+        // 触摸滑动支持
+        function setupSwipe() {
+            let touchStartX = 0;
+            const panel = document.getElementById('wrongPanel');
+
+            panel.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+
+            panel.addEventListener('touchend', e => {
+                if (touchStartX - e.changedTouches[0].clientX > 50) {
+                    toggleWrongPanel();
+                }
+            }, { passive: true });
+        }
+
+        // 启动系统
+        init();
+    </script>
+</body>
+
+</html>
