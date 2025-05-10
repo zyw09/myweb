@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>刷题</title>
+    <title>智能刷题系统</title>
+    <!-- 新增文件保存库（若未引入） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         :root {
             --color-primary: #007bff;
@@ -33,8 +35,10 @@
             top: 1rem;
             right: 1rem;
             display: flex;
+            flex-direction: column;
             gap: 0.5rem;
-            z-index: 1001;
+            z-index: 999;
+            /* 降低层级，低于错题面板的1000 */
         }
 
         /* 通用按钮样式 */
@@ -297,6 +301,8 @@
 <body>
     <div class="panel-controls">
         <button class="toggle-panel-btn" onclick="toggleWrongPanel()">错题集</button>
+        <!-- 新增导出TXT按钮 -->
+        <button class="toggle-panel-btn" style="background: #ffc107;" onclick="exportToTxt()">导出TXT</button>
     </div>
 
     <div class="wrong-questions-panel" id="wrongPanel">
@@ -329,7 +335,6 @@
     <script>
 
         alert("答案和解析均由AI生成，有错误答案请谅解");
-        alert("文峰卷模拟试卷（一）");
         // 题库数据
         const questions = [
             {
@@ -795,6 +800,54 @@
                 }
             }, { passive: true });
         }
+
+
+
+
+
+        // 导出TXT文档函数
+        function exportToTxt() {
+            if (wrongQuestions.length === 0) {
+                alert("当前没有错题记录！");
+                return;
+            }
+
+            // 生成TXT内容（适应屏幕的换行格式）
+            let txtContent = "智能刷题系统错题集\n\n";
+            wrongQuestions.forEach((question, index) => {
+                txtContent += `第${index + 1}题：${question.question}\n`;
+                txtContent += "选项：\n";
+                question.options.forEach(opt => {
+                    txtContent += `  ${opt}\n`; // 缩进2空格适应屏幕
+                });
+                txtContent += `正确答案：${question.options[question.answer]}\n`;
+                txtContent += `解析：${question.explanation}\n\n`; // 题间空行
+            });
+
+            // 创建Blob并保存文件
+            const blob = new Blob([txtContent], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, `错题集-${new Date().toLocaleDateString()}.txt`);
+        }
+
+        // 答题逻辑中维护wrongQuestions（需根据实际答题函数调整）
+        function handleOptionClick(selectedIndex) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === currentQuestion.answer;
+
+            // 标记正确/错误选项样式（假设已有）
+            // ... existing code ...
+
+            // 答错时添加到错题集
+            if (!isCorrect) {
+                // 避免重复添加同一题
+                if (!wrongQuestions.some(q => q.question === currentQuestion.question)) {
+                    wrongQuestions.push(currentQuestion);
+                    document.getElementById('wrongCount').textContent = wrongQuestions.length;
+                }
+            }
+        }
+
+
 
         // 启动系统
         init();
