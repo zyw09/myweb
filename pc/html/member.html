@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程会员 - 畅练千节会员课</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/member.css">
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <!-- 返回按钮 -->
+    <div class="back-button" id="backButton" onclick=window.location.href='./my.html'>
+        <i class="fas fa-arrow-left"></i>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="mainTitle">课程会员</h1>
+            <p class="subtitle" id="subTitle">开通课程专享会员 · 畅练千节会员课</p>
+
+            <div class="toggle-container">
+                <button id="vipBtn" class="toggle-btn active">VIP会员</button>
+                <button id="svipBtn" class="toggle-btn">SVIP会员</button>
+            </div>
+        </header>
+
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-type" id="cardType1">月卡</div>
+                <div class="member-type" id="memberType1">VIP</div>
+                <div class="price" id="monthPrice">9.9</div>
+                <div class="period" id="period1">有效期30天</div>
+
+                <ul class="features" id="features1">
+                    <li><i class="fas fa-check-circle"></i> 千节会员课无限畅练</li>
+                    <li><i class="fas fa-check-circle"></i> 名师科学编排指导</li>
+                    <li><i class="fas fa-check-circle"></i> 新手入门专属课程</li>
+                </ul>
+
+                <button class="btn">立即开通</button>
+            </div>
+
+            <div class="card">
+
+                <div class="card-type" id="cardType2">季卡</div>
+                <div class="member-type" id="memberType2">VIP</div>
+                <div class="price" id="quarterPrice">27</div>
+                <div class="period" id="period2">有效期90天</div>
+
+                <ul class="features" id="features2">
+                    <li><i class="fas fa-check-circle"></i> 月卡所有权益</li>
+                    <li><i class="fas fa-check-circle"></i> 进阶训练计划</li>
+                    <li><i class="fas fa-check-circle"></i> 专属健身食谱</li>
+                    <li><i class="fas fa-check-circle"></i> 每月私教直播课</li>
+                </ul>
+
+                <button class="btn">立即开通</button>
+            </div>
+
+            <div class="card popular pulse">
+                <div class="popular-tag" id="popularTag">推荐</div>
+                <div class="card-type" id="cardType3">年卡</div>
+                <div class="member-type" id="memberType3">VIP</div>
+                <div class="price" id="yearPrice">108</div>
+                <div class="period" id="period3">有效期365天</div>
+
+                <ul class="features" id="features3">
+                    <li><i class="fas fa-check-circle"></i> 季卡所有权益</li>
+                    <li><i class="fas fa-check-circle"></i> 个性化训练计划</li>
+                    <li><i class="fas fa-check-circle"></i> 专家1对1指导</li>
+                    <li><i class="fas fa-check-circle"></i> 线下活动优先参与</li>
+                    <li><i class="fas fa-check-circle"></i> 专属健身装备礼包</li>
+                </ul>
+
+                <button class="btn">立即开通</button>
+            </div>
+        </div>
+
+        <p class="notice">支付即同意会员服务协议</p>
+
+        <div class="benefits">
+            <h2 id="benefitsTitle">课程会员服务权益介绍</h2>
+            <div class="benefits-content" id="benefitsContent">
+                <p>内含<span
+                        class="highlight">千节会员课</span>，名师科学编排指导，轻松跟练。涵盖燃脂塑形、瑜伽养生、力量和心肺训练等，课程分类分级，可满足新手、基础和进阶运动人士的不同需求。
+                </p>
+                <p style="margin-top: 20px;">SVIP会员专享更多高级权益：<span class="highlight">专属私教课程</span>、<span
+                        class="highlight">个性化训练计划</span>、<span class="highlight">营养师定制食谱</span>、<span
+                        class="highlight">线下活动优先参与权</span>以及<span class="highlight">健身装备礼包</span>。选择SVIP，获得更全面的健身体验！</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义提示框 -->
+    <div class="custom-alert" id="customAlert" style="display: none;">
+        <span class="close-alert" id="closeAlert">&times;</span>
+        <div id="alertContent"></div>
+    </div>
+
+    <!-- 编辑模态框 -->
+    <div class="edit-modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑会员信息</h3>
+            </div>
+            <span class="close-modal" id="closeModal">&times;</span>
+
+            <div class="form-group">
+                <label for="editTitle">主标题</label>
+                <input type="text" id="editTitle" placeholder="输入主标题">
+            </div>
+
+            <div class="form-group">
+                <label for="editSubtitle">副标题</label>
+                <input type="text" id="editSubtitle" placeholder="输入副标题">
+            </div>
+
+            <div class="form-group">
+                <label for="editVipName">VIP会员名称</label>
+                <input type="text" id="editVipName" placeholder="输入VIP会员名称">
+            </div>
+
+            <div class="form-group">
+                <label for="editSvipName">SVIP会员名称</label>
+                <input type="text" id="editSvipName" placeholder="输入SVIP会员名称">
+            </div>
+
+            <div class="form-group">
+                <label for="editCardType1">月卡类型名称</label>
+                <input type="text" id="editCardType1" placeholder="输入月卡类型名称">
+            </div>
+
+            <div class="price-row">
+                <div class="price-col">
+                    <label for="editVipPrice1">VIP月卡价格</label>
+                    <input type="text" id="editVipPrice1" placeholder="VIP月卡价格">
+                </div>
+                <div class="price-col">
+                    <label for="editSvipPrice1">SVIP月卡价格</label>
+                    <input type="text" id="editSvipPrice1" placeholder="SVIP月卡价格">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="editPeriod1">月卡有效期</label>
+                <input type="text" id="editPeriod1" placeholder="输入月卡有效期">
+            </div>
+
+            <div class="form-group">
+                <label for="editCardType2">季卡类型名称</label>
+                <input type="text" id="editCardType2" placeholder="输入季卡类型名称">
+            </div>
+
+            <div class="price-row">
+                <div class="price-col">
+                    <label for="editVipPrice2">VIP季卡价格</label>
+                    <input type="text" id="editVipPrice2" placeholder="VIP季卡价格">
+                </div>
+                <div class="price-col">
+                    <label for="editSvipPrice2">SVIP季卡价格</label>
+                    <input type="text" id="editSvipPrice2" placeholder="SVIP季卡价格">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="editPeriod2">季卡有效期</label>
+                <input type="text" id="editPeriod2" placeholder="输入季卡有效期">
+            </div>
+
+            <div class="form-group">
+                <label for="editCardType3">年卡类型名称</label>
+                <input type="text" id="editCardType3" placeholder="输入年卡类型名称">
+            </div>
+
+            <div class="price-row">
+                <div class="price-col">
+                    <label for="editVipPrice3">VIP年卡价格</label>
+                    <input type="text" id="editVipPrice3" placeholder="VIP年卡价格">
+                </div>
+                <div class="price-col">
+                    <label for="editSvipPrice3">SVIP年卡价格</label>
+                    <input type="text" id="editSvipPrice3" placeholder="SVIP年卡价格">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="editPeriod3">年卡有效期</label>
+                <input type="text" id="editPeriod3" placeholder="输入年卡有效期">
+            </div>
+
+            <div class="form-group">
+                <label for="editPopularTag">推荐标签文本</label>
+                <input type="text" id="editPopularTag" placeholder="输入推荐标签文本">
+            </div>
+
+            <div class="form-group">
+                <label for="editFeatures">服务概括 (每项一行)</label>
+                <textarea id="editFeatures" placeholder="每行输入一项服务内容"></textarea>
+            </div>
+
+            <button class="save-btn" id="saveChanges">保存更改</button>
+        </div>
+    </div>
+
+    <!-- 权益介绍编辑模态框 -->
+    <div class="edit-modal" id="benefitsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑会员权益介绍</h3>
+            </div>
+            <span class="close-modal" id="closeBenefitsModal">&times;</span>
+
+            <div class="form-group">
+                <label for="editBenefitsTitle">权益介绍标题</label>
+                <input type="text" id="editBenefitsTitle" placeholder="输入权益介绍标题">
+            </div>
+
+            <div class="form-group">
+                <label for="editBenefitsContent">权益介绍内容</label>
+                <textarea id="editBenefitsContent" placeholder="输入详细的权益介绍内容"></textarea>
+            </div>
+
+            <button class="save-btn" id="saveBenefits">保存更改</button>
+        </div>
+    </div>
+
+    <script src="../js/member.js">
+
+
+
+
+    </script>
+</body>
+
+</html>

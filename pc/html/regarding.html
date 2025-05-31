@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运动健康 - 关于</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/regarding.css">
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 头部区域 -->
+        <header>
+            <button class="back-btn" id="backBtn" onclick=window.location.href='./my.html'>
+                <i class="fas fa-arrow-left"></i>
+            </button>
+
+            <div class="logo-container">
+                <!-- 使用logo.png作为应用logo -->
+                <img src="../photo/logo.png" class="logo" id="appLogo"
+                    onerror="document.getElementById('logoFallback').style.display='flex'">
+                <!-- 备用Logo（当logo.png不可用时显示） -->
+                <div class="logo-fallback" id="logoFallback" style="display: none;">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+            </div>
+            <h1 class="header-title">关于</h1>
+        </header>
+
+        <!-- 运动健康卡片 -->
+        <div class="card">
+            <div class="section-title">
+                <span>运动健康</span>
+                <span class="version">当前版本3.4.0</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>给轻态源好评</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+        </div>
+
+        <!-- 用户协议和隐私卡片 -->
+        <div class="card">
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>用户协议</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>用户隐私政策</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>用户隐私政策摘要</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>用户体验改进计划</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>已收集个人信息清单</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>第三方共享个人信息清单</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>查看个人敏感信息收集和处理告知</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>轻态源注意事项及风险提示</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+        </div>
+
+        <!-- 隐私政策撤回卡片 -->
+        <div class="card" onclick="showToast('功能即将开放，敬请期待！')">
+            <div class="list-item">
+                <span>隐私政策撤回同意</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="privacy-note">
+                撤回同意后，你在平台的所有数据将被删除，请谨慎操作。
+            </div>
+        </div>
+        <!-- Toast提示 -->
+        <div class="toast" id="toast"></div>
+
+        <!-- 用户体验改进计划卡片 -->
+        <div class="card">
+            <div class="list-item" onclick="showToast('功能即将开放，敬请期待！')">
+                <span>参与用户体验改进计划</span>
+                <i class="fas fa-chevron-right right-arrow"></i>
+            </div>
+
+            <div class="privacy-note">
+                我们会统计你对产品部分功能的使用情况，用以提升产品和服务。整个过程会遵循我们的隐私政策。
+            </div>
+        </div>
+
+        <!-- 注销按钮 -->
+        <button class="logout-btn" id="logoutBtn">注销：轻态源服务</button>
+    </div>
+
+    <!-- 自定义确认框 -->
+    <div class="custom-modal" id="customModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">确定注销吗？</div>
+            </div>
+            <div class="modal-body">
+                确定要注销轻态源服务吗？此操作将删除所有数据且不可恢复。
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" id="cancelBtn">取消</button>
+                <button class="modal-btn confirm" id="confirmBtn">确定</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/regarding.js">
+
+    </script>
+</body>
+
+</html>

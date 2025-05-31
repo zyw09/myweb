@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的 - 轻态源</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/my.css">
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 顶部用户信息 -->
+        <div class="profile-header" id="profileHeader">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user" id="avatarIcon"></i>
+                    <div class="camera-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Yi</div>
+                    <div class="user-meta" id="userMeta">男 | 175厘米 | 17岁</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <!-- 功能入口 -->
+            <div class="section">
+                <div class="section-title">
+                    <span>我的活动</span>
+                </div>
+                <div class="grid-container">
+                    <div class="grid-item" onclick="showToast('功能即将开放，敬请期待！')">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>我的活动</span>
+                    </div>
+                    <div class="grid-item" onclick="showToast('功能即将开放，敬请期待！')">
+                        <i class="fas fa-book"></i>
+                        <span>我的课程</span>
+                    </div>
+                    <div class="grid-item" onclick="showToast('功能即将开放，敬请期待！')">
+                        <i class="fas fa-receipt"></i>
+                        <span>我的订单</span>
+                    </div>
+                    <div class="grid-item" onclick="showToast('功能即将开放，敬请期待！')">
+                        <i class="fas fa-users"></i>
+                        <span>我的亲友</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 会员服务 -->
+            <div class="membership">
+                <div class="membership-content">
+                    <div class="membership-title">课程会员</div>
+                    <div class="membership-desc">开通会员新版千书好课</div>
+                </div>
+                <button class="membership-button" onclick=window.location.href='./member.html'>立即开通</button>
+            </div>
+
+            <!-- 小习惯 -->
+            <div class="habit">
+                <div class="habit-content">
+                    <div class="habit-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="habit-text">小习惯</div>
+                </div>
+                <button class="join-button">加入打卡</button>
+            </div>
+
+            <!-- 健康周报 -->
+            <div class="health-report">
+                <div class="report-dates">运动健康周报 05:19~05:25</div>
+            </div>
+
+            <!-- 吃水果活力竞赛 -->
+            <div class="habit">
+                <div class="habit-content">
+                    <div class="habit-icon" style="background: var(--accent);">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <div class="habit-text">吃水果活力竞赛<br><small>和好友来场PK</small></div>
+                </div>
+                <button class="join-button">立即参与</button>
+            </div>
+
+            <!-- 我的勋章 -->
+            <div class="section">
+                <div class="section-title">
+                    <span>我的勋章</span>
+                    <span class="view-all">全部</span>
+                </div>
+                <div class="badges-container">
+                    <div class="badge-item">
+                        <div class="badge-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="badge-name">500次步数达标</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="badge-name">活力一周</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <div class="badge-name">步数达标</div>
+                    </div>
+                </div>
+                <div class="badges-container">
+                    <div class="badge-item">
+                        <div class="badge-icon">
+                            <i class="fas fa-road"></i>
+                        </div>
+                        <div class="badge-name">跑步100公里</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="badge-name">活力一周</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-count">500</div>
+                        <div class="badge-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="badge-name">全部</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- 健康问诊 -->
+            <div class="habit">
+                <div class="habit-content">
+                    <div class="habit-icon" style="background: var(--success);">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div class="habit-text">健康问诊<br><small>平安健康</small></div>
+                </div>
+                <button class="join-button">立即咨询</button>
+            </div>
+
+            <!-- 我的路线库 -->
+            <div class="habit">
+                <div class="habit-content">
+                    <div class="habit-icon" style="background: var(--warning);">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="habit-text">我的路线库</div>
+                </div>
+            </div>
+
+            <!-- 设置项 -->
+            <div class="section">
+                <div class="section-title">
+                    <span>App 设置</span>
+                </div>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <div class="setting-name">
+                            <div class="setting-icon"><i class="fas fa-database"></i></div>
+                            <span>三方数据管理</span>
+                        </div>
+                        <div class="setting-value"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-name">
+                            <div class="setting-icon"><i class="fas fa-plug"></i></div>
+                            <span>设备授权管理</span>
+                        </div>
+                        <div class="setting-value"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-name">
+                            <div class="setting-icon"><i class="fas fa-shield-alt"></i></div>
+                            <span>系统权限</span>
+                        </div>
+                        <div class="setting-value"></div>
+                    </div>
+                    <div class="setting-item" onclick=window.location.href='./send_back_information.html'>
+                        <div class="setting-name">
+                            <div class="setting-icon"><i class="fas fa-question-circle"></i></div>
+                            <span>帮助与反馈</span>
+                        </div>
+                        <div class="setting-value"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-name">
+                            <div class="setting-icon"><i class="fas fa-share-alt"></i></div>
+                            <span>设备共享</span>
+                        </div>
+                        <div class="setting-value"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-name">
+                            <div class="setting-icon"><i class="fas fa-sync-alt"></i></div>
+                            <span>版本更新</span>
+                        </div>
+                        <div class="setting-value">3.4.0</div>
+                    </div>
+                    <div class="setting-item" onclick=window.location.href='./regarding.html'>
+                        <div class="setting-name">
+                            <div class="setting-icon"><i class="fas fa-info-circle"></i></div>
+                            <span>关于</span>
+                        </div>
+                        <div class="setting-value"></div>
+                    </div>
+                </div>
+                <div class="app-version">轻态源 v3.4.0</div>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick=window.location.href='./home_page.html'>
+                <i class="fas fa-heartbeat"></i>
+                <span>健康</span>
+            </div>
+            <div class="nav-item" onclick=window.location.href='./sports.html'>
+                <i class="fas fa-running"></i>
+                <span>运动</span>
+            </div>
+            <div class="nav-item" onclick=window.location.href='./nourishment.html'>
+                <i class="fas fa-utensils"></i>
+                <span>营养</span>
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast" id="toast"></div>
+
+    <!-- 用户信息编辑面板 -->
+    <div class="overlay" id="overlay"></div>
+    <div class="edit-panel" id="editPanel">
+        <h2>编辑个人信息</h2>
+        <div class="avatar-upload" id="avatarUpload">
+            <img id="avatarPreview" src="" alt="头像">
+            <div class="camera-icon">
+                <i class="fas fa-camera"></i>
+            </div>
+            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+        </div>
+        <div class="form-group">
+            <label for="nameInput">用户名</label>
+            <input type="text" id="nameInput" placeholder="输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="genderSelect">性别</label>
+            <select id="genderSelect">
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="heightInput">身高 (厘米)</label>
+            <input type="number" id="heightInput" placeholder="输入身高">
+        </div>
+        <div class="form-group">
+            <label for="ageInput">年龄</label>
+            <input type="number" id="ageInput" placeholder="输入年龄">
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-save" id="saveBtn">保存</button>
+            <button class="btn btn-cancel" id="cancelBtn">取消</button>
+        </div>
+    </div>
+
+    <script src="../js/my.js">
+
+    </script>
+</body>
+
+</html>

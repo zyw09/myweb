@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>运动健康追踪 - 轻态源</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sports.css">
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="overlay" id="overlay"></div>
+        <!-- 用户名编辑面板 -->
+        <div class="user-edit-panel" id="usernameEditPanel">
+            <div class="edit-panel-header">
+                <div class="edit-panel-title">编辑用户名</div>
+                <button class="edit-close">&times;</button>
+            </div>
+            <input type="text" class="edit-input" id="usernameInput" placeholder="输入用户名">
+            <div class="edit-buttons">
+                <button class="edit-btn edit-cancel">取消</button>
+                <button class="edit-btn edit-confirm" id="confirmUsername">确认</button>
+            </div>
+        </div>
+
+        <!-- 头像编辑面板 -->
+        <div class="user-edit-panel" id="avatarEditPanel">
+            <div class="edit-panel-header">
+                <div class="edit-panel-title">编辑头像</div>
+                <button class="edit-close">&times;</button>
+            </div>
+            <div class="avatar-preview" id="avatarPreview">
+                <i class="fas fa-user"></i>
+            </div>
+            <input type="file" class="edit-input" id="avatarUpload" accept="image/*">
+            <div class="edit-buttons">
+                <button class="edit-btn edit-cancel">取消</button>
+                <button class="edit-btn edit-confirm" id="confirmAvatar">确认</button>
+            </div>
+        </div>
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1>运动</h1>
+                    <div class="date-display" id="currentDate">2025年5月30日 星期五</div>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <div class="user-name">运动达人</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="health-metrics">
+            <!-- 运动记录 -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="activity-title">运动记录</div>
+                    <div class="view-all">全部</div>
+                </div>
+                <div class="activity-details">
+                    <div class="activity-stat">
+                        <div class="stat-value">5.2公里</div>
+                        <div class="stat-label">户外跑步</div>
+                    </div>
+                    <div class="activity-stat">
+                        <div class="stat-value">33分8秒</div>
+                        <div class="stat-label">时长</div>
+                    </div>
+                    <div class="activity-stat">
+                        <div class="stat-value">350千卡</div>
+                        <div class="stat-label">消耗</div>
+                    </div>
+                </div>
+                <div class="metric-details">5月19日</div>
+            </div>
+
+            <!-- 训练指标 -->
+            <div class="training-indicators">
+                <div class="indicator-card">
+                    <div class="indicator-value">172</div>
+                    <div class="indicator-label">训练负荷</div>
+                </div>
+                <div class="indicator-card">
+                    <div class="indicator-value">44</div>
+                    <div class="indicator-label">最大摄氧量</div>
+                </div>
+            </div>
+
+            <!-- 跑团 -->
+            <div class="running-groups">
+                <div class="groups-title">热门跑团</div>
+                <div class="groups-container">
+                    <div class="group-card" style="background-image: url('../photo/bj/2.png')">
+                        <div class="group-name">强风吹拂</div>
+                        <div class="group-members">79人已加入</div>
+                    </div>
+                    <div class="group-card" style="background-image: url('../photo/bj/3.png')">
+                        <div class="group-name">孝感应城跑团</div>
+                        <div class="group-members">33人已加入</div>
+                    </div>
+                    <div class="group-card" style="background-image: url('../photo/bj/4.png')">
+                        <div class="group-name">黄香跑团</div>
+                        <div class="group-members">19人已加入</div>
+                    </div>
+                    <div class="group-card" style="background-image: url('../photo/bj/5.png')">
+                        <div class="group-name">马拉松训练营</div>
+                        <div class="group-members">42人已加入</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 训练计划 -->
+            <div class="training-plans">
+                <div class="plans-header">
+                    <div class="plans-title">训练计划</div>
+                    <div class="view-all">全部</div>
+                </div>
+                <div class="plans-container">
+                    <div class="plan-card" style="background-image: url('../photo/bj/6.png')">
+                        <div class="plan-name">运动习惯养成</div>
+                        <div class="plan-progress">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
+                        <div class="plan-status">3/5天</div>
+                    </div>
+                    <div class="plan-card" style="background-image: url('../photo/bj/7.png')">
+                        <div class="plan-name">跑步能力提升</div>
+                        <div class="plan-progress">
+                            <div class="progress-bar" style="width: 30%"></div>
+                        </div>
+                        <div class="plan-status">突破 3/5 公里</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活动推荐 -->
+            <div class="activity-recommendations">
+                <div class="recommendations-header">
+                    <div class="recommendations-title">活动推荐</div>
+                    <div class="view-all">全部</div>
+                </div>
+                <div class="recommendations-container">
+                    <div class="recommendation-card">
+                        <div class="recommendation-name">童心快乐跑</div>
+                        <div class="recommendation-type">主题活动</div>
+                    </div>
+                    <div class="recommendation-card">
+                        <div class="recommendation-name">小满盈实 跑量进阶</div>
+                        <div class="recommendation-type">月度跑量</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 运动课程 -->
+            <div class="workout-courses">
+                <div class="courses-header">
+                    <div class="courses-title">运动课程</div>
+                    <div class="view-all">全部 ></div>
+                </div>
+
+                <div class="courses-container">
+                    <!-- 课程1 -->
+                    <div class="course-card">
+                        <div class="course-image" style="background: linear-gradient(45deg, #ff9a9e, #fad0c4);"></div>
+                        <div class="course-title">高效减脂:搏击操</div>
+                        <div class="course-meta">
+                            <div class="course-stats">
+                                <i class="fas fa-user"></i>
+                                <span>1006338人</span>
+                            </div>
+                            <div class="course-info">3节课程</div>
+                        </div>
+                    </div>
+
+                    <!-- 课程2 -->
+                    <div class="course-card">
+                        <div class="course-image" style="background: linear-gradient(45deg, #a1c4fd, #c2e9fb);"></div>
+                        <div class="course-title">TABATA耐力挑战</div>
+                        <div class="course-meta">
+                            <div class="course-stats">
+                                <i class="fas fa-user"></i>
+                                <span>744109人</span>
+                            </div>
+                            <div class="course-info">3节课程</div>
+                        </div>
+                    </div>
+
+                    <!-- 课程3 -->
+                    <div class="course-card">
+                        <div class="course-image" style="background: linear-gradient(45deg, #ffecd2, #fcb69f);"></div>
+                        <div class="course-title">极速燃脂第一季</div>
+                        <div class="course-meta">
+                            <div class="course-stats">
+                                <i class="fas fa-user"></i>
+                                <span>762534人</span>
+                            </div>
+                            <div class="course-info">4节课程</div>
+                        </div>
+                    </div>
+
+                    <!-- 课程4 -->
+                    <div class="course-card">
+                        <div class="course-image" style="background: linear-gradient(45deg, #84fab0, #8fd3f4);"></div>
+                        <div class="course-title">节奏燃脂有氧操</div>
+                        <div class="course-meta">
+                            <div class="course-stats">
+                                <i class="fas fa-user"></i>
+                                <span>823188人</span>
+                            </div>
+                            <div class="course-info">4节课程</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 体感游戏控制器 -->
+            <div class="dance-controller">
+                <div>
+                    <div class="dance-title">舞力全开</div>
+                    <div class="dance-subtitle">体感游戏控制器</div>
+                </div>
+                <button class="dance-button">释放双手，即刻舞动!</button>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <i class="fas fa-heartbeat" onclick=window.location.href='./home_page.html'></i>
+                <span onclick=window.location.href='./home_page.html'>健康</span>
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-running"></i>
+                <span>运动</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-utensils" onclick=window.location.href='./nourishment.html'></i>
+                <span onclick=window.location.href='./nourishment.html'>营养</span>
+            </div>
+            <div class="nav-item" onclick=window.location.href='./my.html'>
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载动画 -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div>加载中...</div>
+        </div>
+    </div>
+
+    <!-- 提示条 -->
+    <div class="notification" id="notification"></div>
+
+    <script src="../js/sports.js">
+
+    </script>
+</body>
+
+</html>

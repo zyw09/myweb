@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - 轻态源</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        :root {
+            --primary: #4a69bd;
+            --secondary: #6a89cc;
+            --accent: #f8c291;
+            --text-dark: #333;
+            --text-light: #fff;
+            --text-gray: #777;
+            --danger: #e55039;
+            --success: #78e08f;
+            --warning: #f6b93b;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4a69bd 0%, #6a89cc 100%);
+            min-height: 100vh;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .admin-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 1;
+        }
+
+        .admin-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .admin-content {
+            padding: 2rem;
+        }
+
+        .users-count {
+            background: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .users-table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+            border-radius: 0.8rem;
+            border: 1px solid #eee;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .users-table th {
+            background: #f1f2f6;
+            padding: 1rem;
+            text-align: left;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .users-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .users-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .edit-btn,
+        .delete-btn,
+        .change-pwd-btn {
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .edit-btn {
+            background: #e9f7ef;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .edit-btn:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        .delete-btn {
+            background: #fceae9;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .change-pwd-btn {
+            background: #e9f0ff;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .change-pwd-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .add-user-form {
+            background: #f8f9fa;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .form-title {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .add-btn:hover {
+            background: #3d56a0;
+            transform: translateY(-2px);
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalAppear 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-gray);
+            flex-shrink: 0;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3d56a0;
+        }
+
+        .btn-secondary {
+            background: #f1f2f6;
+            color: var(--text-gray);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e4e8;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .password-strength {
+            height: 5px;
+            background: #f1f2f6;
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            background: var(--danger);
+            transition: all 0.3s;
+        }
+
+        .strength-weak {
+            background: var(--danger);
+        }
+
+        .strength-medium {
+            background: var(--warning);
+        }
+
+        .strength-strong {
+            background: var(--success);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .status-active {
+            background: #e9f7ef;
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: #fceae9;
+            color: var(--danger);
+        }
+
+        .status-admin {
+            background: #e9f0ff;
+            color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .admin-container {
+                margin: 1rem auto;
+                border-radius: 1rem;
+            }
+
+            .admin-header {
+                padding: 1rem;
+                justify-content: center;
+            }
+
+            .admin-title {
+                font-size: 1.4rem;
+                justify-content: center;
+                flex: 1 0 100%;
+            }
+
+            .logout-btn {
+                padding: 0.4rem 1rem;
+            }
+
+            .admin-content {
+                padding: 1.5rem;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
+
+            .form-row {
+                gap: 0.8rem;
+            }
+
+            .add-user-form {
+                padding: 1.2rem;
+                margin-top: 1.5rem;
+            }
+
+            .form-title {
+                font-size: 1.1rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+
+            .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+                flex: 1;
+            }
+
+            .action-btns {
+                justify-content: center;
+            }
+
+            .edit-btn,
+            .delete-btn,
+            .change-pwd-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-container {
+                margin: 0.5rem auto;
+                border-radius: 0.8rem;
+            }
+
+            .admin-content {
+                padding: 1rem;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+
+            .status-badge {
+                padding: 0.2rem 0.6rem;
+                font-size: 0.8rem;
+            }
+
+            .modal-content {
+                padding: 1.2rem;
+            }
+
+            .modal-title {
+                font-size: 1.1rem;
+            }
+
+            .form-title {
+                font-size: 1rem;
+            }
+
+            .form-input {
+                padding: 0.7rem;
+                font-size: 0.9rem;
+            }
+
+            .add-btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div class="admin-title">
+                <i class="fas fa-users-cog"></i> 用户账户管理
+            </div>
+            <button class="logout-btn" onclick="location.href='../index.html'">
+                <i class="fas fa-sign-out-alt"></i> 返回主页
+            </button>
+        </div>
+
+        <div class="admin-content">
+            <div class="users-count">
+                <i class="fas fa-user-friends"></i> 当前用户数: <span id="usersCount">0</span>
+            </div>
+
+            <div class="users-table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>手机号</th>
+                            <th>邮箱</th>
+                            <th>账户类型</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- 用户数据将通过JS动态填充 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="add-user-form">
+                <h3 class="form-title"><i class="fas fa-user-plus"></i> 添加新用户</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="newUsername" class="form-input" placeholder="输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>手机号</label>
+                        <input type="tel" id="newPhone" class="form-input" placeholder="输入手机号">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" id="newEmail" class="form-input" placeholder="输入邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label>账户类型</label>
+                        <select id="newUserType" class="form-input">
+                            <option value="user">普通用户</option>
+                            <option value="admin">管理员</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group password-toggle">
+                        <label>密码</label>
+                        <input type="password" id="newPassword" class="form-input" placeholder="输入密码">
+                        <i class="fas fa-eye" id="toggleNewPassword"></i>
+                        <div class="password-strength">
+                            <div class="strength-meter" id="passwordStrength"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="add-btn" onclick="addUser()">
+                    <i class="fas fa-plus"></i> 添加用户
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑用户模态框 -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-user-edit"></i> 编辑用户信息</h3>
+                <button class="close-modal" onclick="closeModal('editUserModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="editUsername" class="form-input">
+            </div>
+            <div class="form-group">
+                <label>手机号</label>
+                <input type="tel" id="editPhone" class="form-input">
+            </div>
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="email" id="editEmail" class="form-input">
+            </div>
+            <div class="form-group">
+                <label>账户类型</label>
+                <select id="editUserType" class="form-input">
+                    <option value="user">普通用户</option>
+                    <option value="admin">管理员</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>账户状态</label>
+                <select id="editUserStatus" class="form-input">
+                    <option value="active">激活</option>
+                    <option value="inactive">禁用</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editUserModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveUserChanges()">保存更改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改密码模态框 -->
+    <div class="modal" id="changePasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-key"></i> 修改用户密码</h3>
+                <button class="close-modal" onclick="closeModal('changePasswordModal')">&times;</button>
+            </div>
+            <div class="form-group password-toggle">
+                <label>新密码</label>
+                <input type="password" id="newPasswordInput" class="form-input" placeholder="输入新密码">
+                <i class="fas fa-eye" id="toggleNewPasswordInput"></i>
+            </div>
+            <div class="form-group password-toggle">
+                <label>确认新密码</label>
+                <input type="password" id="confirmPasswordInput" class="form-input" placeholder="再次输入新密码">
+                <i class="fas fa-eye" id="toggleConfirmPassword"></i>
+            </div>
+            <div class="password-strength">
+                <div class="strength-meter" id="newPasswordStrength"></div>
+            </div>
+            <div id="passwordMatchMessage" style="margin-top: 10px; color: var(--danger); display: none;">
+                <i class="fas fa-exclamation-circle"></i> 两次输入的密码不一致
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('changePasswordModal')">取消</button>
+                <button class="btn btn-primary" onclick="updateUserPassword()">更新密码</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认删除模态框 -->
+    <div class="modal" id="confirmDeleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-exclamation-triangle"></i> 确认删除用户</h3>
+                <button class="close-modal" onclick="closeModal('confirmDeleteModal')">&times;</button>
+            </div>
+            <p style="margin-bottom: 1.5rem; line-height: 1.6;">
+                您确定要删除用户 <strong id="deleteUserName">[用户名]</strong> 吗？此操作不可撤销，所有相关数据将被永久删除。
+            </p>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('confirmDeleteModal')">取消</button>
+                <button class="btn btn-danger" onclick="confirmDeleteUser()"
+                    style="background: var(--danger);">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取用户数据
+        let users = JSON.parse(localStorage.getItem('registeredUsers'));
+        if (!users || users.length === 0) {
+            users = [
+                { username: "管理员", phone: "13800138000", email: "admin@example.com", password: "admin123", isAdmin: true, status: "active" },
+                { username: "张三", phone: "13900139000", email: "zhangsan@example.com", password: "user123", isAdmin: false, status: "active" },
+                { username: "李四", phone: "13700137000", email: "lisi@example.com", password: "user456", isAdmin: false, status: "active" },
+                { username: "王五", phone: "13600136000", email: "wangwu@example.com", password: "user789", isAdmin: false, status: "inactive" }
+            ];
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+        }
+
+        const usersTableBody = document.getElementById('usersTableBody');
+        const usersCount = document.getElementById('usersCount');
+
+        // 当前编辑的用户索引
+        let currentEditIndex = -1;
+        let currentPasswordChangeIndex = -1;
+        let currentDeleteIndex = -1;
+
+        // 初始化用户表格
+        function renderUsersTable() {
+            usersTableBody.innerHTML = '';
+            usersCount.textContent = users.length;
+
+            if (users.length === 0) {
+                usersTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-user-slash"></i>
+                                <p>暂无用户数据</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+
+                // 账户状态
+                const statusClass = user.status === 'inactive' ? 'status-inactive' :
+                    user.isAdmin ? 'status-admin' : 'status-active';
+                const statusText = user.status === 'inactive' ? '已禁用' :
+                    user.isAdmin ? '管理员' : '已激活';
+
+                row.innerHTML = `
+                    <td>${user.username || '-'}</td>
+                    <td>${user.phone || '-'}</td>
+                    <td>${user.email || '-'}</td>
+                    <td>${user.isAdmin ? '管理员' : '普通用户'}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td class="action-btns">
+                        <div class="edit-btn" onclick="openEditModal(${index})">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="change-pwd-btn" onclick="openPasswordModal(${index})">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="delete-btn" onclick="openDeleteModal(${index})">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </td>
+                `;
+
+                usersTableBody.appendChild(row);
+            });
+        }
+
+        // 打开编辑模态框
+        function openEditModal(index) {
+            const user = users[index];
+            currentEditIndex = index;
+
+            document.getElementById('editUsername').value = user.username || '';
+            document.getElementById('editPhone').value = user.phone || '';
+            document.getElementById('editEmail').value = user.email || '';
+            document.getElementById('editUserType').value = user.isAdmin ? 'admin' : 'user';
+            document.getElementById('editUserStatus').value = user.status || 'active';
+
+            document.getElementById('editUserModal').style.display = 'flex';
+        }
+
+        // 打开修改密码模态框
+        function openPasswordModal(index) {
+            currentPasswordChangeIndex = index;
+            document.getElementById('newPasswordInput').value = '';
+            document.getElementById('confirmPasswordInput').value = '';
+            document.getElementById('passwordMatchMessage').style.display = 'none';
+            document.getElementById('changePasswordModal').style.display = 'flex';
+        }
+
+        // 打开删除确认模态框
+        function openDeleteModal(index) {
+            currentDeleteIndex = index;
+            document.getElementById('deleteUserName').textContent = users[index].username || '该用户';
+            document.getElementById('confirmDeleteModal').style.display = 'flex';
+        }
+
+        // 关闭模态框
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 保存用户更改
+        function saveUserChanges() {
+            if (currentEditIndex === -1) return;
+
+            const user = users[currentEditIndex];
+
+            user.username = document.getElementById('editUsername').value;
+            user.phone = document.getElementById('editPhone').value;
+            user.email = document.getElementById('editEmail').value;
+            user.isAdmin = document.getElementById('editUserType').value === 'admin';
+            user.status = document.getElementById('editUserStatus').value;
+
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            renderUsersTable();
+            closeModal('editUserModal');
+            alert('用户信息更新成功！');
+        }
+
+        // 更新用户密码
+        function updateUserPassword() {
+            if (currentPasswordChangeIndex === -1) return;
+
+            const newPassword = document.getElementById('newPasswordInput').value;
+            const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+            if (newPassword !== confirmPassword) {
+                document.getElementById('passwordMatchMessage').style.display = 'block';
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                alert('密码长度不能少于6个字符');
+                return;
+            }
+
+            users[currentPasswordChangeIndex].password = newPassword;
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            renderUsersTable();
+            closeModal('changePasswordModal');
+            alert('密码更新成功！');
+        }
+
+        // 确认删除用户
+        function confirmDeleteUser() {
+            if (currentDeleteIndex === -1) return;
+
+            users.splice(currentDeleteIndex, 1);
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            renderUsersTable();
+            closeModal('confirmDeleteModal');
+            alert('用户已成功删除！');
+        }
+
+        // 添加用户
+        function addUser() {
+            const username = document.getElementById('newUsername').value;
+            const phone = document.getElementById('newPhone').value;
+            const email = document.getElementById('newEmail').value;
+            const password = document.getElementById('newPassword').value;
+            const isAdmin = document.getElementById('newUserType').value === 'admin';
+
+            if (!username || !phone || !email || !password) {
+                alert('请填写所有必填字段');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('密码长度不能少于6个字符');
+                return;
+            }
+
+            // 检查邮箱是否已存在
+            if (users.some(user => user.email === email)) {
+                alert('该邮箱已被注册');
+                return;
+            }
+
+            const newUser = {
+                username,
+                phone,
+                email,
+                password,
+                isAdmin,
+                status: 'active'
+            };
+
+            users.push(newUser);
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+            // 清空表单
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPhone').value = '';
+            document.getElementById('newEmail').value = '';
+            document.getElementById('newPassword').value = '';
+
+            renderUsersTable();
+            alert('用户添加成功！');
+        }
+
+        // 密码强度检测
+        function checkPasswordStrength(password) {
+            let strength = 0;
+
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            return strength;
+        }
+
+        // 更新密码强度指示器
+        function updatePasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthMeter = document.getElementById('passwordStrength');
+            const strength = checkPasswordStrength(password);
+
+            strengthMeter.style.width = (strength * 25) + '%';
+
+            if (strength < 2) {
+                strengthMeter.className = 'strength-meter strength-weak';
+            } else if (strength < 4) {
+                strengthMeter.className = 'strength-meter strength-medium';
+            } else {
+                strengthMeter.className = 'strength-meter strength-strong';
+            }
+        }
+
+        // 切换密码可见性
+        function setupPasswordToggles() {
+            // 新用户密码切换
+            document.getElementById('toggleNewPassword').addEventListener('click', function () {
+                const passwordInput = document.getElementById('newPassword');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+
+            // 修改密码模态框中的密码切换
+            document.getElementById('toggleNewPasswordInput').addEventListener('click', function () {
+                const passwordInput = document.getElementById('newPasswordInput');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+
+            document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+                const passwordInput = document.getElementById('confirmPasswordInput');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function () {
+            renderUsersTable();
+            setupPasswordToggles();
+
+            // 监听密码输入变化
+            document.getElementById('newPassword').addEventListener('input', updatePasswordStrength);
+            document.getElementById('newPasswordInput').addEventListener('input', function () {
+                const password = this.value;
+                const strengthMeter = document.getElementById('newPasswordStrength');
+                const strength = checkPasswordStrength(password);
+
+                strengthMeter.style.width = (strength * 25) + '%';
+
+                if (strength < 2) {
+                    strengthMeter.className = 'strength-meter strength-weak';
+                } else if (strength < 4) {
+                    strengthMeter.className = 'strength-meter strength-medium';
+                } else {
+                    strengthMeter.className = 'strength-meter strength-strong';
+                }
+            });
+
+            // 监听确认密码输入变化
+            document.getElementById('confirmPasswordInput').addEventListener('input', function () {
+                const newPassword = document.getElementById('newPasswordInput').value;
+                const confirmPassword = this.value;
+                const matchMessage = document.getElementById('passwordMatchMessage');
+
+                if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+                    matchMessage.style.display = 'block';
+                } else {
+                    matchMessage.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

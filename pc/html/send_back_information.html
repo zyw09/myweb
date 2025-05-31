@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户反馈</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/send_back_information.css">
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick=window.location.href='./my.html'>
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>用户反馈</h1>
+            <p>您的宝贵建议将帮助我们改进产品和服务</p>
+        </div>
+
+        <form class="feedback-form" id="feedbackForm">
+            <div class="form-group">
+                <label for="feedback">
+                    <i class="fas fa-comment-alt"></i>反馈内容
+                </label>
+                <textarea id="feedback" class="form-control" placeholder="请详细描述您遇到的问题或建议..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-images"></i>上传图片 (可选)
+                </label>
+                <div class="upload-section">
+                    <input type="file" id="imageInput" accept="image/*" multiple>
+                    <button type="button" class="upload-btn" onclick="document.getElementById('imageInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>选择图片
+                    </button>
+                    <p style="margin-top: 15px; color: #777; font-size: 14px;">支持JPG、PNG格式，最多4张</p>
+
+                    <div class="image-preview" id="imagePreview"></div>
+                </div>
+            </div>
+
+            <button type="button" class="submit-btn">
+                提交反馈 <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+
+        <div class="footer">
+            <p>© 2023 轻态源 | 感谢您的支持与反馈</p>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">反馈提交成功！</span>
+    </div>
+
+    <script src="../js/send_back_information.js">
+
+    </script>
+</body>
+
+</html>

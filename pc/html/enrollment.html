@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>轻态源 - 注册</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        :root {
+            --primary: rgb(254, 230, 18);
+            --secondary: rgb(254, 231, 163);
+            --accent: rgb(255, 199, 198);
+            --accent-dark: rgb(255, 170, 168);
+            --text-dark: #333;
+            --text-light: #fff;
+            --text-gray: #777;
+            --border-radius: 1.875rem;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --warning: #f39c12;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0 1rem;
+            position: relative;
+            overflow-x: hidden;
+            animation: gradientShift 10s ease infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .header {
+            padding: 1.5rem 0 0 0.5rem;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-text {
+            font-size: 1.6rem;
+            color: var(--text-light);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-name {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-top: 0.4rem;
+            font-weight: 500;
+        }
+
+        .register-container {
+            background: white;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            margin-top: 1.5rem;
+            padding: 3rem 1.5rem 2rem;
+            flex-grow: 1;
+            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo-container {
+            position: absolute;
+            top: -65px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-logo {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fef612 0%, #fee7a3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 6px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .app-logo:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .app-logo img {
+            width: 75%;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1.1rem 1.6rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
+        }
+
+        .input-field:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 199, 198, 0.3);
+            background-color: white;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .input-icon:hover {
+            color: var(--accent-dark);
+        }
+
+        .code-container {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .code-input {
+            flex: 1;
+        }
+
+        .send-code-btn {
+            padding: 0 1.2rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(255, 199, 198, 0.4);
+        }
+
+        .send-code-btn:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .send-code-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .agreement {
+            display: flex;
+            align-items: flex-start;
+            margin: 1.8rem 0;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .agreement input {
+            margin-right: 0.7rem;
+            margin-top: 0.25rem;
+            cursor: pointer;
+        }
+
+        .agreement a {
+            color: #007aff;
+            text-decoration: none;
+            margin: 0 3px;
+            white-space: nowrap;
+            transition: color 0.2s;
+        }
+
+        .agreement a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(255, 199, 198, 0.6);
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 170, 168, 0.7);
+        }
+
+        .register-btn:active {
+            transform: translateY(1px);
+        }
+
+        .register-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(25deg);
+            transition: all 0.6s;
+        }
+
+        .register-btn:hover::after {
+            left: 120%;
+        }
+
+        .message {
+            text-align: center;
+            margin: 1.2rem 0;
+            font-size: 0.95rem;
+            min-height: 1.5rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message.success {
+            color: var(--success);
+        }
+
+        .message.error {
+            color: var(--error);
+        }
+
+        .message.warning {
+            color: var(--warning);
+        }
+
+        .login-prompt {
+            text-align: center;
+            margin-top: 1.8rem;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .login-prompt a {
+            color: var(--accent-dark);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 0.3rem;
+            transition: all 0.2s;
+        }
+
+        .login-prompt a:hover {
+            text-decoration: underline;
+            color: #ff7a76;
+        }
+
+        #agreementPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.92);
+            color: white;
+            padding: 1.8rem 2.5rem;
+            border-radius: 15px;
+            z-index: 1000;
+            max-width: 85%;
+            text-align: center;
+            font-size: 1.1rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-20px) translateX(15px) rotate(45deg);
+            }
+
+            50% {
+                transform: translateY(-40px) translateX(-15px) rotate(90deg);
+            }
+
+            75% {
+                transform: translateY(-20px) translateX(10px) rotate(135deg);
+            }
+
+            100% {
+                transform: translateY(0) translateX(0) rotate(180deg);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .app-logo {
+                width: 110px;
+                height: 110px;
+                top: -55px;
+            }
+
+            .input-field {
+                padding: 1rem 1.4rem;
+            }
+
+            .register-btn {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding-top: 1.2rem;
+            }
+
+            .welcome-text {
+                font-size: 1.4rem;
+            }
+
+            .app-name {
+                font-size: 1.15rem;
+            }
+
+            .app-logo {
+                width: 95px;
+                height: 95px;
+                top: -45px;
+            }
+
+            .register-container {
+                padding: 2.5rem 1.2rem 1.8rem;
+            }
+
+            .agreement {
+                font-size: 0.8rem;
+            }
+
+            .code-container {
+                flex-direction: column;
+            }
+
+            .send-code-btn {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .app-logo {
+                width: 85px;
+                height: 85px;
+                top: -40px;
+            }
+
+            .input-field {
+                padding: 0.85rem 1.2rem;
+                font-size: 0.92rem;
+            }
+
+            .agreement {
+                flex-wrap: wrap;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="floating-elements">
+        <div class="floating-element" style="width: 80px; height: 80px; top: 10%; left: 5%; animation-duration: 18s;">
+        </div>
+        <div class="floating-element" style="width: 50px; height: 50px; top: 25%; left: 80%; animation-duration: 22s;">
+        </div>
+        <div class="floating-element"
+            style="width: 120px; height: 120px; top: 65%; left: 15%; animation-duration: 25s;"></div>
+        <div class="floating-element" style="width: 40px; height: 40px; top: 45%; left: 70%; animation-duration: 16s;">
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="welcome-text">加入轻态源</div>
+        <div class="app-name">开启健康生活之旅</div>
+    </div>
+
+    <div class="register-container">
+        <div class="logo-container">
+            <div class="app-logo">
+                <img src="../photo/logo.png" alt="轻态源">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="text" id="phone" class="input-field" placeholder="请输入手机号">
+            <i class="fas fa-mobile-alt input-icon"></i>
+        </div>
+
+        <div class="form-group">
+            <div class="code-container">
+                <input type="text" id="code" class="input-field code-input" placeholder="请输入验证码">
+                <button id="sendCodeBtn" class="send-code-btn">获取验证码</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="password" id="password" class="input-field" placeholder="请设置密码（6-20位字符）">
+            <i class="fas fa-eye input-icon" id="togglePassword"></i>
+        </div>
+
+        <div class="form-group">
+            <input type="password" id="confirmPassword" class="input-field" placeholder="请确认密码">
+            <i class="fas fa-lock input-icon"></i>
+        </div>
+
+        <div class="agreement">
+            <input type="checkbox" id="agree">
+            <label for="agree">已阅读并同意</label>
+            <a href="#"> 轻态源协议 </a>和
+            <a href="#"> 隐私政策 </a>
+        </div>
+
+        <button class="register-btn" onclick="register()">
+            <i class="fas fa-user-plus"></i> 注册账号
+        </button>
+
+        <div id="message" class="message"></div>
+
+        <div class="login-prompt">
+            已有账号？<a href="../index.html">立即登录</a>
+        </div>
+    </div>
+
+    <div id="agreementPopup">请稍等</div>
+
+    <script>
+        // 生成浮动元素
+        function createFloatingElements() {
+            const container = document.querySelector('.floating-elements');
+            const count = 8;
+
+            for (let i = 0; i < count; i++) {
+                const size = Math.random() * 60 + 20;
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                const duration = Math.random() * 20 + 15;
+                const delay = Math.random() * 5;
+
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.width = `${size}px`;
+                element.style.height = `${size}px`;
+                element.style.top = `${top}%`;
+                element.style.left = `${left}%`;
+                element.style.animationDuration = `${duration}s`;
+                element.style.animationDelay = `${delay}s`;
+                element.style.opacity = Math.random() * 0.4 + 0.1;
+
+                container.appendChild(element);
+            }
+        }
+
+        // 密码可见性切换
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // 验证码发送功能
+        document.getElementById('sendCodeBtn').addEventListener('click', function () {
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message');
+
+            if (!phone) {
+                showMessage('请输入手机号', 'error');
+                return;
+            }
+
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                showMessage('手机号格式不正确', 'error');
+                return;
+            }
+
+            // 禁用按钮并开始倒计时
+            this.disabled = true;
+            let countdown = 60;
+
+            const timer = setInterval(() => {
+                this.textContent = `重新发送(${countdown})`;
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(timer);
+                    this.disabled = false;
+                    this.textContent = '获取验证码';
+                }
+            }, 1000);
+
+            // 模拟发送验证码
+            setTimeout(() => {
+                showMessage('验证码已发送至您的手机', 'success');
+            }, 1500);
+        });
+
+        // 显示消息
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = 'message show ' + type;
+
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 5000);
+        }
+
+        // 显示协议弹窗
+        function showAgreement(type) {
+            const popup = document.getElementById('agreementPopup');
+            popup.textContent = `正在加载${type}...`;
+            popup.style.display = 'block';
+
+            setTimeout(() => {
+                popup.style.display = 'none';
+                showMessage(`${type}加载完成`, 'success');
+            }, 1500);
+        }
+
+        // 注册功能
+        function register() {
+            const phone = document.getElementById('phone').value;
+            const code = document.getElementById('code').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agree = document.getElementById('agree').checked;
+
+            // 验证表单
+            if (!phone) {
+                showMessage('请输入手机号', 'error');
+                return;
+            }
+
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                showMessage('手机号格式不正确', 'error');
+                return;
+            }
+
+            if (!code) {
+                showMessage('请输入验证码', 'error');
+                return;
+            }
+
+            if (!password) {
+                showMessage('请输入密码', 'error');
+                return;
+            }
+
+            if (password.length < 6 || password.length > 20) {
+                showMessage('密码长度应为6-20位字符', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+
+            if (!agree) {
+                showMessage('请阅读并同意相关协议', 'warning');
+                return;
+            }
+
+            // 模拟注册过程
+            showMessage('注册中，请稍候...', 'success');
+
+            setTimeout(() => {
+                // 获取已存储用户或初始化空数组
+                const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+
+                // 检查用户是否已存在
+                if (users.some(user => user.phone === phone)) {
+                    showMessage('该手机号已注册', 'error');
+                    return;
+                }
+
+                // 添加新用户
+                users.push({ phone, password });
+                localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+                showMessage('注册成功！即将跳转到登录页面', 'success');
+
+                // 3秒后跳转到登录页面
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 3000);
+            }, 2000);
+        }
+
+        // 添加回车键注册功能
+        document.getElementById('confirmPassword').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                register();
+            }
+        });
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function () {
+            createFloatingElements();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>健康数据追踪 - 轻态源</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/home_page.css">
+    <script>
+        // 获取来源页面URL
+        const referrer = document.referrer;
+        const displayElement = document.getElementById('referrerInfo');
+        var htmlwj = 0;
+
+        if (!referrer) {
+            htmlwj = 1;
+        }
+        console.log("直接访问");
+        if (htmlwj) {
+            window.location.href = "../index.html"; // 不符合来源时跳转
+
+        }
+    </script>
+</head>
+
+<body>
+    <!-- 新增输入面板 -->
+    <div class="overlay" id="overlay"></div>
+
+    <div class="input-panel" id="inputPanel">
+        <div class="panel-header">
+            <div class="panel-title">更新卡路里数据</div>
+            <button class="close-panel" id="closePanel">&times;</button>
+        </div>
+
+        <div class="input-group">
+            <label class="input-label">今日卡路里消耗 (千卡)</label>
+            <input type="number" class="input-field" id="caloriesInput" placeholder="输入卡路里数值">
+        </div>
+
+        <div class="input-group">
+            <label class="input-label">变化百分比 (%)</label>
+            <input type="number" class="input-field" id="changeInput" placeholder="输入变化百分比">
+        </div>
+
+        <button class="panel-button" id="saveData">保存数据</button>
+    </div>
+
+    <!-- 新增编辑面板 -->
+    <div class="edit-panel" id="editPanel">
+        <div class="panel-header">
+            <div class="panel-title">编辑健康数据</div>
+            <button class="close-panel" id="closeEditPanel">&times;</button>
+        </div>
+
+        <div class="edit-content">
+            <div class="edit-item" id="stepsEdit">
+                <div class="edit-header">
+                    <div class="edit-icon">
+                        <i class="fas fa-shoe-prints"></i>
+                    </div>
+                    <div class="edit-title">步数</div>
+                </div>
+                <div class="edit-controls">
+                    <input type="number" class="edit-input" id="stepsInput" value="13500">
+                    <div class="edit-buttons">
+                        <button class="edit-btn" id="stepsDecrease">-</button>
+                        <button class="edit-btn" id="stepsIncrease">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-item" id="moderateEdit">
+                <div class="edit-header">
+                    <div class="edit-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <div class="edit-title">中高强度活动</div>
+                </div>
+                <div class="edit-controls">
+                    <input type="number" class="edit-input" id="moderateInput" value="67">
+                    <div class="edit-buttons">
+                        <button class="edit-btn" id="moderateDecrease">-</button>
+                        <button class="edit-btn" id="moderateIncrease">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-item" id="standEdit">
+                <div class="edit-header">
+                    <div class="edit-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="edit-title">站立活动</div>
+                </div>
+                <div class="edit-controls">
+                    <input type="number" class="edit-input" id="standInput" value="15">
+                    <div class="edit-buttons">
+                        <button class="edit-btn" id="standDecrease">-</button>
+                        <button class="edit-btn" id="standIncrease">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="edit-save" id="saveEditData">保存所有更改</button>
+    </div>
+
+    <!-- 新增健康指标编辑面板 -->
+    <div class="health-panel" id="bloodPressurePanel">
+        <div class="panel-header">
+            <div class="panel-title">编辑血压数据</div>
+            <button class="close-panel" id="closeBloodPressure">&times;</button>
+        </div>
+        <div class="health-input-group">
+            <label class="input-label">收缩压 (mmHg)</label>
+            <input type="number" class="input-field" id="systolicInput" placeholder="输入收缩压">
+        </div>
+        <div class="health-input-group">
+            <label class="input-label">舒张压 (mmHg)</label>
+            <input type="number" class="input-field" id="diastolicInput" placeholder="输入舒张压">
+        </div>
+        <div class="health-buttons">
+            <button class="health-button health-cancel" id="cancelBloodPressure">取消</button>
+            <button class="health-button health-save" id="saveBloodPressure">保存</button>
+        </div>
+    </div>
+
+    <div class="health-panel" id="bloodOxygenPanel">
+        <div class="panel-header">
+            <div class="panel-title">编辑血氧数据</div>
+            <button class="close-panel" id="closeBloodOxygen">&times;</button>
+        </div>
+        <div class="health-input-group">
+            <label class="input-label">血氧饱和度 (%)</label>
+            <input type="number" class="input-field" id="oxygenInput" placeholder="输入血氧值" min="0" max="100">
+        </div>
+        <div class="health-buttons">
+            <button class="health-button health-cancel" id="cancelBloodOxygen">取消</button>
+            <button class="health-button health-save" id="saveBloodOxygen">保存</button>
+        </div>
+    </div>
+
+    <div class="health-panel" id="weightPanel">
+        <div class="panel-header">
+            <div class="panel-title">编辑体重数据</div>
+            <button class="close-panel" id="closeWeight">&times;</button>
+        </div>
+        <div class="health-input-group">
+            <label class="input-label">体重 (kg)</label>
+            <input type="number" class="input-field" id="weightInput" placeholder="输入体重">
+        </div>
+        <div class="health-buttons">
+            <button class="health-button health-cancel" id="cancelWeight">取消</button>
+            <button class="health-button health-save" id="saveWeight">保存</button>
+        </div>
+    </div>
+
+    <div class="health-panel" id="bmiPanel">
+        <div class="panel-header">
+            <div class="panel-title">计算BMI</div>
+            <button class="close-panel" id="closeBmi">&times;</button>
+        </div>
+        <div class="health-input-group">
+            <label class="input-label">身高 (cm)</label>
+            <input type="number" class="input-field" id="heightInput" placeholder="输入身高" value="175">
+        </div>
+        <div class="health-input-group">
+            <label class="input-label">体重 (kg)</label>
+            <input type="number" class="input-field" id="bmiWeightInput" placeholder="输入体重" value="68.5">
+        </div>
+        <div class="health-input-group">
+            <label class="input-label">BMI 值</label>
+            <input type="number" class="input-field" id="bmiValue" placeholder="BMI值" readonly>
+        </div>
+        <div class="health-buttons">
+            <button class="health-button health-cancel" id="cancelBmi">取消</button>
+            <button class="health-button health-save" id="saveBmi">保存</button>
+        </div>
+    </div>
+
+    <!-- 新增用户信息编辑面板 -->
+    <div class="user-panel" id="userNamePanel">
+        <div class="panel-header">
+            <div class="panel-title">编辑用户名</div>
+            <button class="close-panel" id="closeUserName">&times;</button>
+        </div>
+        <div class="input-group">
+            <label class="input-label">新用户名</label>
+            <input type="text" class="input-field" id="userNameInput" placeholder="输入新用户名">
+        </div>
+        <button class="panel-button" id="saveUserName">保存</button>
+    </div>
+
+    <!-- 新增头像编辑面板 -->
+    <div class="user-panel" id="avatarPanel">
+        <div class="panel-header">
+            <div class="panel-title">编辑头像</div>
+            <button class="close-panel" id="closeAvatar">&times;</button>
+        </div>
+        <div class="avatar-edit-container">
+            <div class="avatar-preview" id="avatarPreview">
+                <i class="fas fa-user"></i>
+            </div>
+            <input type="file" id="avatarUpload" class="avatar-upload-input" accept="image/*">
+            <button class="avatar-upload-btn" id="avatarUploadBtn">选择图片</button>
+        </div>
+        <button class="panel-button" id="saveAvatar">保存头像</button>
+    </div>
+
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <p>正在更新健康数据...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1>健康</h1>
+                    <div class="date-display" id="currentDate">2023年5月29日，星期一</div>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="user-name">张伟</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="health-metrics">
+            <div class="dashboard-title">
+                <i class="fas fa-heartbeat"></i>
+                <span>今日健康概览</span>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card_1" id="caloriesCard">
+                    <div class="metric-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="metric-title">卡路里</div>
+                    <div class="metric-value" id="caloriesValue">800</div>
+                    <div class="metric-target">/500千卡</div>
+                    <div class="trend-indicator">
+                        <i class="fas fa-arrow-up trend-up"></i>
+                        <span id="changeValue">+12%</span>
+                    </div>
+                </div>
+
+                <div class="metric-card pulse" id="stepsCard">
+                    <div class="metric-icon">
+                        <i class="fas fa-shoe-prints"></i>
+                    </div>
+                    <div class="metric-title">步数</div>
+                    <div class="metric-value" id="stepsValue">13500</div>
+                    <div class="metric-target">/6000步</div>
+                    <div class="trend-indicator">
+                        <i class="fas fa-arrow-up trend-up"></i>
+                        <span id="stepsChange">225%</span>
+                    </div>
+                </div>
+
+                <div class="metric-card" id="moderateCard">
+                    <div class="metric-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <div class="metric-title">中高强度</div>
+                    <div class="metric-value" id="moderateValue">67</div>
+                    <div class="metric-target">/30分钟</div>
+                    <div class="trend-indicator">
+                        <i class="fas fa-check-circle trend-down"></i>
+                        <span id="moderateStatus">已达成</span>
+                    </div>
+                </div>
+
+                <div class="metric-card" id="standCard">
+                    <div class="metric-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="metric-title">站立活动</div>
+                    <div class="metric-value" id="standValue">15</div>
+                    <div class="metric-target">次</div>
+                    <div class="trend-indicator">
+                        <i class="fas fa-arrow-up trend-up"></i>
+                        <span id="standChange">+3次</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="large-metric" id="sleepCard">
+                <div class="metric-header">
+                    <h2><i class="fas fa-bed"></i> 睡眠分析</h2>
+                    <div class="metric-details">5月29日</div>
+                </div>
+                <div class="metric-value">5时47分</div>
+                <div class="quality-indicator">
+                    <span>睡眠质量:</span>
+                    <span class="quality-average">一般</span>
+                </div>
+
+                <div class="improvement-tag tag-improve">有待提高</div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span>浅睡</span>
+                        <span>深睡</span>
+                        <span>REM</span>
+                    </div>
+                    <div class="time-range">
+                        <span>23:30</span>
+                        <span>05:47</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="large-metric" id="heartCard">
+                <div class="metric-header">
+                    <h2><i class="fas fa-heart"></i> 心率监测</h2>
+                    <div class="metric-details">5月29日 18:16</div>
+                </div>
+                <div class="heart-rate-container">
+                    <div class="heart-rate-line">
+                        <svg viewBox="0 0 500 100" preserveAspectRatio="none">
+                            <path d="M0,80 C100,30 150,70 200,50 C250,30 300,70 350,40 C400,10 450,60 500,30"
+                                stroke="#e55039" stroke-width="3" fill="none" stroke-linejoin="round"
+                                stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="heart-rate-value">85</div>
+                    <div class="heart-rate-label">次/分</div>
+                </div>
+                <div class="improvement-tag tag-excellent">优</div>
+
+                <div class="health-status">
+                    <div class="status-card">
+                        <div class="status-title">静息心率</div>
+                        <div class="status-value" id="restingHeartRate">68</div>
+                        <div class="metric-target">次/分</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-title">最高心率</div>
+                        <div class="status-value" id="maxHeartRate">132</div>
+                        <div class="metric-target">次/分</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-title">
+                <i class="fas fa-chart-line"></i>
+                <span>健康指标</span>
+            </div>
+
+            <div class="health-status">
+                <div class="status-card" id="bloodPressureCard">
+                    <div class="status-title">血压</div>
+                    <div class="status-value status-good" id="bloodPressureValue">118/76</div>
+                    <div class="metric-target">mmHg</div>
+                </div>
+
+                <div class="status-card" id="bloodOxygenCard">
+                    <div class="status-title">血氧</div>
+                    <div class="status-value" id="bloodOxygenValue">98%</div>
+                </div>
+
+                <div class="status-card" id="weightCard">
+                    <div class="status-title">体重</div>
+                    <div class="status-value" id="weightValue">68.5</div>
+                    <div class="metric-target">kg</div>
+                </div>
+
+                <div class="status-card" id="bmiCard">
+                    <div class="status-title">BMI</div>
+                    <div class="status-value" id="bmiValue">22.3</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <i class="fas fa-heartbeat"></i>
+                <span>健康</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-running" onclick=window.location.href='./sports.html'></i>
+                <span onclick=window.location.href='./sports.html'>运动</span>
+            </div>
+
+            <div class="nav-item">
+                <i class="fas fa-utensils" onclick=window.location.href='./nourishment.html'></i>
+                <span onclick=window.location.href='./nourishment.html'>营养</span>
+            </div>
+            <div class="nav-item" onclick=window.location.href='./my.html'>
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/home_page.js">
+
+    </script>
+</body>
+
+</html>
