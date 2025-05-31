@@ -1,0 +1,611 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #fef6e0 0%, #fff9e6 100%);
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* 返回按钮 */
+.back-button {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    width: 50px;
+    height: 50px;
+    background: rgb(254, 230, 32);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-button:hover {
+    transform: translateX(-5px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.back-button i {
+    font-size: 1.8rem;
+    color: #222;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 70px;
+    /* 为返回按钮腾出空间 */
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px 0;
+    position: relative;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #222;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(254, 230, 32, 0.2);
+    padding: 15px 30px;
+    border-radius: 15px;
+}
+
+h1:hover {
+    background: rgba(254, 230, 32, 0.3);
+    transform: translateY(-3px);
+}
+
+h1:after {
+    content: "点击编辑";
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: #ff5722;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+h1:hover:after {
+    opacity: 1;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    color: #666;
+    margin-top: 40px;
+}
+
+.toggle-container {
+    background: white;
+    border-radius: 50px;
+    padding: 5px;
+    display: inline-flex;
+    margin: 25px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgb(254, 230, 32);
+}
+
+.toggle-btn {
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: transparent;
+}
+
+.toggle-btn.active {
+    background: rgb(254, 230, 32);
+    color: #222;
+    box-shadow: 0 4px 10px rgba(254, 230, 32, 0.4);
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    width: 300px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #f0f0f0;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    border-color: rgb(254, 230, 32);
+}
+
+.card.popular {
+    border: 3px solid rgb(254, 230, 32);
+    transform: scale(1.05);
+}
+
+.card.popular:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.popular-tag {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: rgb(254, 230, 32);
+    color: #222;
+    padding: 5px 35px;
+    transform: rotate(45deg);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.card-type {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.member-type {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #222;
+    margin: 20px 0;
+    position: relative;
+}
+
+.price:before {
+    content: "¥";
+    font-size: 1.5rem;
+    position: relative;
+    top: -15px;
+    margin-right: 5px;
+}
+
+.period {
+    color: #777;
+    font-size: 1rem;
+    margin-top: -10px;
+}
+
+.features {
+    list-style: none;
+    text-align: left;
+    margin: 25px 0;
+    padding: 0 10px;
+}
+
+.features li {
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+    display: flex;
+    align-items: center;
+}
+
+.features li:last-child {
+    border-bottom: none;
+}
+
+.features li i {
+    color: rgb(254, 230, 32);
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: rgb(254, 230, 32);
+    color: #222;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(254, 230, 32, 0.3);
+}
+
+.btn:hover {
+    background: #222;
+    color: rgb(254, 230, 32);
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(254, 230, 32, 0.4);
+}
+
+.notice {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 10px;
+}
+
+.benefits {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-top: 50px;
+    position: relative;
+}
+
+.benefits h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #222;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(254, 230, 32, 0.2);
+    padding: 15px 30px;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+.benefits h2:hover {
+    background: rgba(254, 230, 32, 0.3);
+    transform: translateY(-3px);
+}
+
+.benefits-content {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+}
+
+.highlight {
+    background: rgba(254, 230, 32, 0.2);
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+/* 自定义提示框 */
+.custom-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 25px 40px;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 1000;
+    font-size: 1.2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    width: 350px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.close-alert {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #ccc;
+    transition: all 0.3s ease;
+}
+
+.close-alert:hover {
+    color: white;
+}
+
+/* 编辑模态框 */
+.edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.edit-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    animation: modalIn 0.4s ease;
+}
+
+@keyframes modalIn {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    background: rgb(254, 230, 32);
+    margin: -40px -40px 30px;
+    padding: 25px 40px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-header h3 {
+    color: #222;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 1.8rem;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    color: #222;
+    transform: rotate(90deg);
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: rgb(254, 230, 32);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(254, 230, 32, 0.2);
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.save-btn {
+    background: rgb(254, 230, 32);
+    color: #222;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(254, 230, 32, 0.3);
+}
+
+.save-btn:hover {
+    background: #222;
+    color: rgb(254, 230, 32);
+    transform: translateY(-3px);
+}
+
+.price-row {
+    display: flex;
+    gap: 15px;
+}
+
+.price-col {
+    flex: 1;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .card.popular {
+        transform: scale(1);
+    }
+
+    .card.popular:hover {
+        transform: translateY(-10px);
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+    }
+
+    .toggle-btn {
+        padding: 10px 30px;
+    }
+
+    .benefits {
+        padding: 30px 20px;
+    }
+
+    .modal-content {
+        padding: 30px 20px;
+    }
+
+    .modal-header {
+        padding: 20px;
+        margin: -30px -20px 20px;
+    }
+
+    .price-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .back-button {
+        top: 15px;
+        left: 15px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding-top: 60px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        padding: 10px 20px;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .toggle-btn {
+        padding: 8px 20px;
+        font-size: 0.95rem;
+    }
+
+    .price {
+        font-size: 2.5rem;
+    }
+
+    .benefits h2 {
+        font-size: 1.6rem;
+        padding: 10px 20px;
+    }
+
+    .back-button {
+        top: 10px;
+        left: 10px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .back-button i {
+        font-size: 1.5rem;
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(254, 230, 32, 0.6);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(254, 230, 32, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(254, 230, 32, 0);
+    }
+}

@@ -1,0 +1,366 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+:root {
+    --primary: rgb(254, 230, 18);
+    --secondary: rgb(254, 231, 163);
+    --accent: rgb(255, 199, 198);
+    --text-dark: #333;
+    --text-light: #fff;
+    --text-gray: #777;
+    --border-radius: 1.875rem;
+    --admin-color: #4a69bd;
+}
+
+body {
+    background: linear-gradient(to bottom, var(--primary) 0%, var(--secondary) 50%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.header {
+    padding: 1.5rem 0 0 0.5rem;
+    text-align: left;
+    position: relative;
+}
+
+.admin-hint {
+    position: absolute;
+    top: 1.5rem;
+    right: 1rem;
+    background-color: var(--admin-color);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(74, 105, 189, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(74, 105, 189, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(74, 105, 189, 0);
+    }
+}
+
+.welcome-text {
+    font-size: 1.4rem;
+    color: var(--text-light);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.app-name {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-top: 0.4rem;
+    font-weight: 500;
+}
+
+.login-container {
+    background: white;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    margin-top: 1.5rem;
+    padding: 2rem 1.5rem;
+    flex-grow: 1;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.logo-container {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.app-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fef612 0%, #fee7a3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.app-logo img {
+    width: 80%;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+
+}
+
+.input-field {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    border: 1px solid #e0e0e0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.input-field:focus {
+    border-color: #aaa;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 199, 198, 0.3);
+}
+
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #aaa;
+}
+
+.agreement {
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+}
+
+.agreement input {
+    margin-right: 0.5rem;
+    margin-top: 0.2rem;
+}
+
+.agreement a {
+    color: #007aff;
+    text-decoration: none;
+    margin: 0 3px;
+    white-space: nowrap;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 199, 198, 0.5);
+}
+
+.login-btn:hover {
+    background-color: rgb(255, 170, 168);
+    transform: translateY(-2px);
+}
+
+.admin-btn {
+    background-color: var(--admin-color);
+    box-shadow: 0 4px 10px rgba(74, 105, 189, 0.5);
+}
+
+.admin-btn:hover {
+    background-color: #3d56a0;
+}
+
+.message {
+    text-align: center;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    min-height: 1.5rem;
+}
+
+.helper-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.helper-link {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.divider {
+    text-align: center;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin: 2rem 0 1.5rem;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background-color: #e0e0e0;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 1.8rem;
+    margin-top: 1.2rem;
+}
+
+.social-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.social-icon:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.social-icon i {
+    font-size: 1.8rem;
+}
+
+.social-icon.qq {
+    color: #12b7f5;
+    background: linear-gradient(to bottom, #e6f7ff, #f0f9ff);
+}
+
+.social-icon.wechat {
+    color: #09bb07;
+    background: linear-gradient(to bottom, #f0fff4, #e6ffe6);
+}
+
+.social-icon.weibo {
+    color: #e6162d;
+    background: linear-gradient(to bottom, #fff0f0, #ffe6e6);
+}
+
+#agreementPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    z-index: 1000;
+    max-width: 80%;
+    text-align: center;
+    font-size: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .app-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .input-field {
+        padding: 0.9rem 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding-top: 1rem;
+    }
+
+    .app-logo {
+        width: 85px;
+        height: 85px;
+    }
+
+    .login-container {
+        padding: 1.8rem 1.2rem;
+    }
+
+    .social-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .social-icon i {
+        font-size: 1.5rem;
+    }
+
+    .helper-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .admin-hint {
+        position: static;
+        margin-top: 0.5rem;
+        text-align: center;
+        display: inline-block;
+    }
+}
+
+@media (max-width: 320px) {
+    .app-logo {
+        width: 75px;
+        height: 75px;
+    }
+
+    .input-field {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    .agreement {
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+    }
+}

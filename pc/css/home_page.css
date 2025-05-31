@@ -1,0 +1,963 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --primary: rgb(254, 230, 32);
+    --secondary: #ffdf70;
+    --accent: #ffb700;
+    --success: #78e08f;
+    --warning: #f6b93b;
+    --danger: #e55039;
+    --text-dark: #333;
+    --text-light: #fff;
+    --text-gray: #777;
+    --bg-light: #f8f9fa;
+    --card-bg: #fff;
+    --input-bg: #fee61f;
+    --edit-panel: rgb(254, 230, 31);
+}
+
+body {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 1rem;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+    background: var(--primary);
+    color: var(--text-dark);
+    padding: 1.2rem;
+    position: relative;
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.date-display {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 0.3rem;
+    color: var(--text-dark);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+}
+
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: background 0.3s;
+}
+
+.user-name:hover,
+.user-avatar:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.health-metrics {
+    padding: 1.2rem;
+    background: var(--bg-light);
+    padding-bottom: 70px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: transform 0.3s;
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card_1 {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: transform 0.3s;
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card_1:active {
+    transform: scale(0.98);
+}
+
+.metric-card:active {
+    transform: scale(0.98);
+}
+
+.metric-title {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.metric-value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    color: var(--text-dark);
+}
+
+.metric-target {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    background: var(--bg-light);
+    border-radius: 1rem;
+    padding: 0.2rem 0.5rem;
+    display: inline-block;
+}
+
+.large-metric {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1.2rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.metric-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.metric-details {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+.quality-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    margin-top: 0.8rem;
+}
+
+.quality-good {
+    color: var(--success);
+    font-weight: 500;
+}
+
+.quality-average {
+    color: var(--warning);
+    font-weight: 500;
+}
+
+.progress-container {
+    margin-top: 1.2rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: var(--accent);
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-gray);
+}
+
+.time-range {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    margin-top: 0.5rem;
+}
+
+.improvement-tag {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 0.8rem;
+}
+
+.tag-improve {
+    background: #fceae9;
+    color: var(--danger);
+}
+
+.tag-excellent {
+    background: #e9f7ef;
+    color: var(--success);
+}
+
+.bottom-nav {
+    display: flex;
+    background: var(--card-bg);
+    border-top: 1px solid #eee;
+    padding: 0.8rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 480px;
+    z-index: 100;
+    margin: 0 auto;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    transition: color 0.3s;
+}
+
+.nav-item.active {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.nav-item i {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+    color: var(--text-gray);
+}
+
+.nav-item.active i {
+    color: var(--text-dark);
+}
+
+.metric-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(254, 230, 32, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.heart-rate-container {
+    position: relative;
+    height: 100px;
+    margin-top: 1rem;
+}
+
+.heart-rate-line {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60%;
+    overflow: hidden;
+}
+
+.heart-rate-line svg {
+    width: 100%;
+    height: 100%;
+}
+
+.heart-rate-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--danger);
+}
+
+.heart-rate-label {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+}
+
+.health-status {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.status-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.status-card:active {
+    transform: scale(0.98);
+}
+
+.status-title {
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    margin-bottom: 0.5rem;
+}
+
+.status-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.status-good {
+    color: var(--success);
+}
+
+.dashboard-title {
+    font-size: 1.3rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dashboard-title i {
+    background: rgba(254, 230, 32, 0.15);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+}
+
+/* 新增输入面板样式 */
+.input-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 85%;
+    max-width: 400px;
+    background: var(--input-bg);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.input-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.panel-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.close-panel {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.close-panel:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.input-field {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: border-color 0.3s;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.panel-button {
+    width: 100%;
+    padding: 14px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.panel-button:hover {
+    background: #222;
+    transform: translateY(-2px);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* 睡眠警告状态 */
+.quality-warning {
+    color: var(--danger);
+    font-weight: 500;
+}
+
+#sleepCard,
+#heartCard {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#sleepCard:active,
+#heartCard:active {
+    transform: scale(0.98);
+}
+
+/* 响应式设计 */
+@media (max-width: 400px) {
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .health-status {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-item {
+        font-size: 0.7rem;
+    }
+
+    .nav-item i {
+        font-size: 1rem;
+    }
+
+    .input-panel {
+        padding: 15px;
+    }
+
+    .panel-title {
+        font-size: 1.1rem;
+    }
+
+    .input-field {
+        padding: 12px;
+        font-size: 1rem;
+    }
+}
+
+/* 手机横屏适配 */
+@media (min-width: 481px) and (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        border-radius: 1.2rem;
+    }
+
+    .metric-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .health-status {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .large-metric {
+        margin-bottom: 1rem;
+    }
+}
+
+/* 加载动画 */
+.loader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-content {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.loader-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--accent);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 新增编辑面板样式 */
+.edit-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    max-width: 400px;
+    background: var(--edit-panel);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.edit-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%);
+}
+
+.edit-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.edit-item {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.edit-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(254, 230, 32, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+.edit-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.edit-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.edit-input {
+    width: 100px;
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border: none;
+    background: #f8f9fa;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn:hover {
+    background: #e9ecef;
+    transform: scale(1.05);
+}
+
+.edit-save {
+    margin-top: 20px;
+    padding: 14px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.edit-save:hover {
+    background: #222;
+    transform: translateY(-2px);
+}
+
+/* 睡眠质量选项样式 */
+#sleepQualityInput {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.7) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 1rem center/1rem;
+    padding-right: 3rem;
+}
+
+/* 新增健康指标编辑面板 */
+.health-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    max-width: 400px;
+    background: var(--edit-panel);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.health-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%);
+}
+
+.health-input-group {
+    margin-bottom: 20px;
+}
+
+.health-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.health-input-group input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: border-color 0.3s;
+}
+
+.health-input-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.health-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.health-button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.health-save {
+    background: #333;
+    color: white;
+}
+
+.health-cancel {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.health-button:hover {
+    transform: translateY(-2px);
+}
+
+/* 新增用户信息编辑面板 */
+.user-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 85%;
+    max-width: 400px;
+    background: var(--edit-panel);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.user-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.avatar-edit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid white;
+}
+
+.avatar-preview i {
+    font-size: 2.5rem;
+    color: #777;
+}
+
+.avatar-upload-btn {
+    padding: 10px 20px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-upload-btn:hover {
+    background: #222;
+    transform: translateY(-2px);
+}
+
+.avatar-upload-input {
+    display: none;
+}

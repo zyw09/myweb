@@ -1,0 +1,911 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --primary: rgb(254, 230, 32);
+    --secondary: #ffdf70;
+    --accent: #ffb700;
+    --success: #78e08f;
+    --warning: #f6b93b;
+    --danger: #e55039;
+    --text-dark: #333;
+    --text-light: #fff;
+    --text-gray: #777;
+    --bg-light: #f8f9fa;
+    --card-bg: #fff;
+    --input-bg: #fee61f;
+    --edit-panel: rgb(254, 230, 31);
+}
+
+body {
+    background: #f5f5f5;
+    min-height: 100vh;
+    padding: 1rem;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+    background: var(--primary);
+    color: var(--text-dark);
+    padding: 1.2rem;
+    position: relative;
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.date-display {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 0.3rem;
+    color: var(--text-dark);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+}
+
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: background 0.3s;
+}
+
+.user-name:hover,
+.user-avatar:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.health-metrics {
+    padding: 1.2rem;
+    background: var(--bg-light);
+    padding-bottom: 70px;
+}
+
+/* 运动记录 */
+.activity-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    transition: all 0.3s ease;
+}
+
+.activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.activity-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.view-all {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    cursor: pointer;
+}
+
+.activity-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.activity-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #e74c3c;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    margin-top: 0.3rem;
+}
+
+.metric-details {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    text-align: right;
+}
+
+.training-indicators {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.indicator-card {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: 0.8rem;
+    padding: 0.8rem;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    transition: all 0.3s ease;
+}
+
+.indicator-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.indicator-value {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+    color: #3498db;
+}
+
+.indicator-label {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+.running-groups {
+    margin-top: 1.5rem;
+    overflow: hidden;
+}
+
+.groups-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: #2c3e50;
+}
+
+.groups-container {
+    display: flex;
+    gap: 0.8rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) #f0f0f0;
+}
+
+.groups-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.groups-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+}
+
+.groups-container::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 10px;
+}
+
+.group-card {
+    min-width: 140px;
+    background: var(--card-bg);
+    border-radius: 0.8rem;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.group-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.group-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.group-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.group-members {
+    font-size: 0.8rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 0.3rem;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.training-plans {
+    margin-top: 1.5rem;
+}
+
+.plans-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.plans-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.plans-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.plan-card {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: 0.8rem;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    transition: all 0.3s ease;
+    /* 添加背景图片样式 */
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+}
+
+.plan-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.plan-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: white;
+    position: relative;
+    z-index: 1;
+}
+
+.plan-progress {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    margin: 0.8rem 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    border-radius: 4px;
+}
+
+.plan-status {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+    z-index: 1;
+}
+
+.activity-recommendations {
+    margin-top: 1.5rem;
+}
+
+.recommendations-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.recommendations-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.recommendations-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.recommendation-card {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: 0.8rem;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.recommendation-type {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 0.3rem;
+    display: inline-block;
+}
+
+.workout-courses {
+    margin-top: 1.5rem;
+}
+
+.courses-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.courses-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.courses-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.course-card {
+    background: var(--card-bg);
+    border-radius: 0.8rem;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 230, 32, 0.2);
+    transition: all 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.course-image {
+    height: 100px;
+    position: relative;
+}
+
+.course-title {
+    padding: 0.8rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.course-meta {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.8rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+.course-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.course-info {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.dance-controller {
+    background: #f0f0f0;
+    border-radius: 0.8rem;
+    padding: 1.2rem;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.dance-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #ffffff;
+}
+
+.dance-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 0.3rem;
+    color: #dadada;
+}
+
+.dance-button {
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.7rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dance-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.bottom-nav {
+    display: flex;
+    background: var(--card-bg);
+    border-top: 1px solid #eee;
+    padding: 0.8rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 480px;
+    z-index: 100;
+    margin: 0 auto;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    transition: color 0.3s;
+}
+
+.nav-item.active {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.nav-item i {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+    color: var(--text-gray);
+}
+
+.nav-item.active i {
+    color: var(--text-dark);
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* 加载动画 */
+.loader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-content {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.loader-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--accent);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 提示条样式 */
+.notification {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 400px) {
+    .training-indicators {
+        flex-direction: column;
+    }
+
+    .plans-container {
+        flex-direction: column;
+    }
+
+    .recommendations-container {
+        flex-direction: column;
+    }
+
+    .courses-container {
+        grid-template-columns: 1fr;
+    }
+
+    .dance-controller {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .notification {
+        width: 90%;
+        padding: 12px 20px;
+        font-size: 0.85rem;
+    }
+
+    .group-card {
+        min-width: 120px;
+        height: 110px;
+    }
+}
+
+@media (max-height: 600px) {
+    .notification {
+        top: 10%;
+    }
+}
+
+@media (max-width: 350px) {
+    .header h1 {
+        font-size: 1.3rem;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .activity-details {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .group-card {
+        min-width: 110px;
+        height: 100px;
+        padding: 0.8rem;
+    }
+
+    .group-name {
+        font-size: 0.85rem;
+    }
+
+    .group-members {
+        font-size: 0.75rem;
+    }
+}
+
+/* 用户编辑面板 */
+.user-edit-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--edit-panel);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 85%;
+    max-width: 320px;
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.edit-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.edit-panel-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.edit-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.edit-input {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.edit-btn {
+    flex: 1;
+    padding: 0.7rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.edit-confirm {
+    background: var(--text-dark);
+    color: white;
+}
+
+.edit-cancel {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-dark);
+}
+
+.edit-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+/* 头像预览 */
+.avatar-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 350px) {
+    .user-edit-panel {
+        padding: 1.2rem;
+    }
+
+    .edit-buttons {
+        flex-direction: column;
+    }
+}
+
+.recommendations-container {
+    background-image: url('../photo/bj/1.png');
+    background-size: cover;
+    background-position: center;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.recommendation-card {
+    background-image: url('../photo/bj/3.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    border: none !important;
+}
+
+.course-image {
+    background-image: url('../photo/bj/2.png');
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.dance-controller {
+    background-image: url('../photo/bj/8.png');
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+
+/* 调整卡片文字颜色以适应新背景 */
+.recommendation-name {
+    color: white !important;
+}
+
+.recommendation-type {
+    background: rgba(0, 0, 0, 0.3) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* 确保图片在响应式设计中的表现 */
+@media (max-width: 400px) {
+    .recommendations-container {
+        background-size: contain;
+    }
+
+    .recommendation-card {
+        background-size: cover;
+    }
+
+    .course-image {
+        background-size: cover !important;
+    }
+}
