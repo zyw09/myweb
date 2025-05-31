@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>极速下载</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a237e, #311b92);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px 15px 80px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: -1;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .back-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #e0e0e0;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.4);
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-container {
+            background: rgba(25, 25, 35, 0.9);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-header {
+            padding: 25px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(20, 20, 30, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgb(354, 230, 32), #6dd5ed);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 8px 25px rgba(33, 147, 176, 0.5);
+        }
+
+        .app-info {
+            flex: 1;
+        }
+
+        .app-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #e0f7fa;
+        }
+
+        .app-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .app-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #b0bec5;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .rating-stars {
+            color: #ffca28;
+        }
+
+        .rating-value {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .app-body {
+            padding: 25px 20px;
+        }
+
+        .screenshots {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screenshot {
+            width: 220px;
+            height: 390px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #2c3e50, #4a6491);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b0c4de;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #4fc3f7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 20px;
+        }
+
+        .description {
+            line-height: 1.7;
+            color: #e0e0e0;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(79, 195, 247, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #4fc3f7;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .requirements {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .req-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+        }
+
+        .req-item:last-child {
+            border-bottom: none;
+        }
+
+        .req-label {
+            color: #b0bec5;
+        }
+
+        .req-value {
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+
+        .download-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 15, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, #00c853, #64dd17);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 200, 83, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .download-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.5);
+        }
+
+        .progress-container {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #b0bec5;
+        }
+
+        .completed {
+            text-align: center;
+            padding: 15px;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 15px;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .version-badge {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .app-size {
+            font-size: 16px;
+            font-weight: 500;
+            color: #4fc3f7;
+        }
+
+        .update-info {
+            font-size: 13px;
+            color: #b0bec5;
+            margin-top: 5px;
+        }
+
+        .reviews {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-top: 15px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .review {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 15px;
+            min-width: 260px;
+            flex-shrink: 0;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .review-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .review-name {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .review-stars {
+            color: #ffca28;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .review-text {
+            font-size: 14px;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 30px;
+            }
+
+            .container {
+                max-width: 450px;
+                width: 100%;
+            }
+
+            .download-section {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                border-radius: 20px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="#" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class=" logo-text">极速下载
+                </div>
+            </div>
+        </div>
+
+        <div class="app-container">
+            <div class="app-header">
+
+                <div class="app-icon">
+                    <img class="app-icon" src="./photo/logo.png">
+
+                </div>
+                <div class=" app-info">
+                    <div class="app-name">轻态源(4.3.0)</div>
+                    <div class="rating">
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-value">4.8 (12万+评价)</div>
+                    </div>
+                    <div class="app-meta">
+                        <div class="app-meta-item">
+                            <i class="fas fa-download"></i>
+                            <span>1.2亿+ 下载</span>
+                        </div>
+                        <div class="app-meta-item">
+                            <i class="fas fa-sd-card"></i>
+                            <span class="app-size">59.19 MB</span>
+                        </div>
+                        <div class="app-meta-item">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>更新于: 2023-11-15</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="version-badge">专业版</div>
+            </div>
+
+            <div class="app-body">
+                <!--
+                <div class="screenshots">
+                    <div class="screenshot">应用界面预览 1</div>
+                    <div class="screenshot">应用界面预览 2</div>
+                    <div class="screenshot">应用界面预览 3</div>
+                </div>
+
+                <div class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    <span>应用介绍</span>
+                </div>
+                <p class="description">
+                    SpeedMaster Pro 是一款专业的手机加速与优化工具，通过智能清理内存、关闭后台进程、降温节电等功能，让您的手机运行如飞。专为高性能手机设计，支持最新安卓和iOS系统。
+                </p>
+                
+                <div class="section-title">
+                    <i class="fas fa-star"></i>
+                    <span>主要功能</span>
+                </div>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="feature-text">一键加速</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-temperature-low"></i>
+                        </div>
+                        <div class="feature-text">手机降温</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                        <div class="feature-text">省电优化</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <div class="feature-text">垃圾清理</div>
+                    </div>
+                </div>-->
+
+                <div class="section-title">
+                    <i class="fas fa-tasks"></i>
+                    <span>系统要求</span>
+                </div>
+                <div class="requirements">
+                    <div class="req-item">
+                        <div class="req-label">操作系统</div>
+                        <div class="req-value">Android 8.0+ / iOS 12+</div>
+                    </div>
+                    <div class="req-item">
+                        <div class="req-label">处理器</div>
+                        <div class="req-value">四核 1.5GHz 或更高</div>
+                    </div>
+                    <div class="req-item">
+                        <div class="req-label">内存</div>
+                        <div class="req-value">2GB RAM</div>
+                    </div>
+                    <div class="req-item">
+                        <div class="req-label">存储空间</div>
+                        <div class="req-value">100MB 可用空间</div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <i class="fas fa-comments"></i>
+                    <span>用户评价</span>
+                </div>
+                <div class="reviews">
+                    <div class="review">
+                        <div class="review-header">
+                            <div class="review-avatar">张</div>
+                            <div class="review-name">张先生</div>
+                        </div>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-text">好用</div>
+                    </div>
+                    <div class="review">
+                        <div class="review-header">
+                            <div class="review-avatar">李</div>
+                            <div class="review-name">李女士</div>
+                        </div>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="review-text">功能很强大，界面也很美观，就是高级功能需要会员，不过基础功能完全够用了。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="download-section">
+            <button id="downloadBtn" class="download-btn">
+                <i class="fas fa-download"></i> 免费下载 轻态源
+
+            </button>
+
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="progress-info">
+                    <span>正在下载...</span>
+                    <span id="percentage">0%</span>
+                </div>
+            </div>
+
+            <div class="completed" id="completed">
+                <i class="fas fa-check-circle"></i> 下载完成！应用已开始安装
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function () {
+            const btn = this;
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progress');
+            const percentage = document.getElementById('percentage');
+            const completed = document.getElementById('completed');
+
+            // 禁用按钮并显示进度条
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 准备下载...';
+            progressContainer.style.display = 'block';
+
+            // 模拟准备过程
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 下载中...';
+
+                // 模拟下载进度
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+
+                        // 下载完成
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                            completed.style.display = 'block';
+
+                            btn.innerHTML = '<i class="fas fa-redo"></i> 重新下载';
+                            btn.disabled = false;
+
+                            // 实际下载文件
+                            const link = document.createElement('a');
+                            link.href = 'https://dl-app.feijix.com/storage/files/2025/05/31/9/5060555129/17486918220961.gz?t=683af2ca&rlimit=20&us=iDcjD5092b&sign=dac16bcdbbbf8a4a286784ffcdac2986&download_name=%E8%BD%BB%E6%80%81%E6%BA%903.4.0.apk';
+                            link.download = 'SpeedMaster_Pro_3.8.2.apk';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }, 800);
+                    } else {
+                        width += Math.random() * 15;
+                        if (width > 100) width = 100;
+
+                        progressBar.style.width = width + '%';
+                        percentage.textContent = Math.floor(width) + '%';
+                    }
+                }, 200);
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>
