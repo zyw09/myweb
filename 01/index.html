@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给WJY的一封信</title>
+    <style>
+        /* 简洁重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 淡黄色基底 */
+            background-color: #fffbe6;
+            /* 加一点温柔的花纹 —— 浅色波点 + 稀疏的小花瓣效果 */
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(240, 200, 150, 0.15) 3px, transparent 3px),
+                radial-gradient(circle at 80% 70%, rgba(220, 180, 130, 0.12) 4px, transparent 4px),
+                radial-gradient(circle at 10% 80%, #f3e0ba 2px, transparent 2px),
+                radial-gradient(circle at 95% 25%, #ecd9b0 3px, transparent 3px),
+                radial-gradient(circle at 45% 50%, #f5deb0 2px, transparent 2px),
+                repeating-linear-gradient(45deg, rgba(200, 170, 120, 0.08) 0px, rgba(200, 170, 120, 0.08) 2px, transparent 2px, transparent 20px);
+            background-size: 80px 80px, 120px 120px, 100px 100px, 150px 150px, 200px 200px, auto;
+            background-position: 0 0;
+            /* 防止背景过于密集，整体依然柔和 */
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            /* 避免花纹引起的意外滚动 */
+        }
+
+        /* 信封链接 —— 纯CSS绘制主体 + 封盖 + 信纸，内部嵌入爱心 */
+        .envelope {
+            position: relative;
+            display: block;
+            width: 120px;
+            /* 稍微大一点让爱心更舒展 */
+            height: 100px;
+            background: linear-gradient(145deg, #fef7ed 0%, #f8e8d4 100%);
+            border-radius: 0 0 12px 12px;
+            box-shadow:
+                0 12px 18px -10px rgba(0, 0, 0, 0.2),
+                0 0 0 1px #ecd9b4 inset,
+                0 0 0 1px #f3e2c9;
+            text-decoration: none;
+            cursor: pointer;
+            animation: bounce 1s infinite ease-in-out;
+            transition: transform 0.2s, box-shadow 0.2s;
+            /* 让爱心可相对于此定位 */
+        }
+
+        /* 跳动动画 */
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+
+            45% {
+                transform: translateY(-14px);
+            }
+
+            55% {
+                transform: translateY(-14px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* 悬停时微微放大 + 跳动继续，增加生动感 */
+        .envelope:hover {
+            transform: scale(1.02) translateY(-4px);
+            box-shadow: 0 18px 22px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px #e6cba4 inset, 0 0 0 1px #e8d3b7;
+        }
+
+        /* 点击反馈 */
+        .envelope:active {
+            transform: scale(0.98) translateY(-4px);
+            transition: transform 0.05s;
+            box-shadow: 0 5px 12px -6px rgba(0, 0, 0, 0.3), 0 0 0 1px #e6c59e inset;
+        }
+
+        /* ---------- 信封封盖 (flap) ---------- */
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            /* 与宽度120匹配 */
+            border-right: 60px solid transparent;
+            border-bottom: 34px solid #dbb58b;
+            /* flap颜色 */
+            z-index: 2;
+            filter: drop-shadow(0 -2px 3px rgba(0, 0, 0, 0.05));
+        }
+
+        /* ---------- 信封露出的信纸 (之前基础上增加一点层次) ---------- */
+        .envelope::after {
+            content: '';
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 22px;
+            background: linear-gradient(145deg, #ffffff 20%, #f5ede1 90%);
+            border-radius: 4px 4px 8px 8px;
+            box-shadow:
+                0 3px 6px rgba(0, 0, 0, 0.1),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.03);
+            border: 1px solid #eddabc;
+            z-index: 3;
+            /* 信纸上的横线，更明显些 */
+            background-image: repeating-linear-gradient(to bottom,
+                    #d2b48c,
+                    #d2b48c 1px,
+                    transparent 1px,
+                    transparent 6px);
+            background-size: 100% 12px;
+            background-repeat: no-repeat;
+            background-position: 6px 5px;
+        }
+
+        /* ------------- 爱心：红色的小小心形 (使用字符♥，但用图形化样式) ------------- */
+        .envelope .heart {
+            position: absolute;
+            bottom: 32px;
+            /* 让爱心位于信纸上面 */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            /* 足够明显但不过大 */
+            line-height: 1;
+            color: #d43f3f;
+            /* 暖红色 */
+            text-shadow: 0 2px 5px rgba(200, 0, 0, 0.2), 0 0 2px #fff8;
+            z-index: 10;
+            /* 确保在最上层 */
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+            animation: tiny-beat 1.2s infinite ease-in-out;
+            /* 微弱独立跳动，更有趣 */
+            display: inline-block;
+            will-change: transform;
+        }
+
+        /* 爱心微动 —— 配合大 bounce，心自己也有小幅度缩放 */
+        @keyframes tiny-beat {
+            0% {
+                transform: translateX(-50%) scale(1);
+            }
+
+            30% {
+                transform: translateX(-50%) scale(1.15);
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.2);
+            }
+
+            70% {
+                transform: translateX(-50%) scale(1.1);
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
+        /* 为了更“爱心”，我们可以使用红色的实心心形符号，但让字体变成更胖一些的样式 */
+        .envelope .heart {
+            font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Arial", sans-serif;
+            /* 使用emoji心或普通心形，emoji更鲜艳 */
+            content: "❤️";
+        }
+
+        /* 如果浏览器支持，可以稍微大一点 */
+        .envelope .heart {
+            font-size: 32px;
+        }
+
+        /* 同时为了兼容，也可以使用伪元素放一颗心，但用span简单可控 */
+
+        /* 确保点击整个区域都有效 */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* 响应式小调整 */
+        @media (max-width: 480px) {
+            .envelope {
+                width: 100px;
+                height: 84px;
+            }
+
+            .envelope::before {
+                border-left-width: 50px;
+                border-right-width: 50px;
+                border-bottom-width: 28px;
+            }
+
+            .envelope::after {
+                width: 40px;
+                height: 18px;
+                bottom: 12px;
+                background-size: 100% 10px;
+            }
+
+            .envelope .heart {
+                font-size: 26px;
+                bottom: 26px;
+            }
+        }
+
+        /* 花纹点缀：body上的花纹已经用background做了，很 subtle */
+        /* 为了让花纹更明显一点点，可以再加一层淡淡的小点，但现在已经足够 */
+    </style>
+</head>
+
+<body>
+    <!-- 
+        可点击的信封，背景淡黄+花纹，信封上有爱心，点击跳转指定页面
+        默认链接到example.com，可替换为实际网址。
+        爱心用❤️符号，红色，浮动在信纸上。
+    -->
+    <a href="./wjy520.html" target="_blank" rel="noopener noreferrer" class="envelope" title="一封带着❤️的信，点击打开">
+        <!-- 红色爱心 span （可显示为❤️） -->
+        <span class="heart" aria-hidden="true">❤️</span>
+        <!-- 为屏幕阅读器准备的说明 -->
+        <span class="sr-only"></span>
+    </a>
+</body>
+
+</html>

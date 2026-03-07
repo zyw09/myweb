@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>致我爱的人</title>
+    <style>
+        /* ===== 全局重置 & 底色 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f6f1ea;
+            /* 暖灰底 */
+            font-family: 'Courier New', 'Cutive Mono', 'Roboto Mono', 'SF Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* ===== 全屏信件容器 (横线背景 + 可滚动) ===== */
+        .letter-full {
+            width: 100%;
+            height: 100vh;
+            background-color: #fefaf5;
+            /* 柔米白 */
+            background-image: repeating-linear-gradient(to bottom,
+                    transparent 0,
+                    transparent 2.0em,
+                    /* 线在文字下方 */
+                    #d4d9df 2.0em,
+                    #d4d9df 2.1em
+                    /* 极细淡线 */
+                );
+            background-repeat: repeat-y;
+            background-position: left top;
+            background-size: 100% 2.2em;
+
+            /* 排版核心 */
+            font-size: clamp(16px, 4vw, 20px);
+            line-height: 2.2em;
+            /* 与背景周期严格一致 */
+            color: #2f3e4b;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            white-space: pre-wrap;
+            word-break: break-word;
+
+            /* 内边距保证文字不贴边 */
+            padding: 2.2rem 1.8rem 3rem 1.8rem;
+
+            /* 滚动 */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd2da #f0ece4;
+        }
+
+        .letter-full::-webkit-scrollbar {
+            width: 6px;
+            background: #f0ece4;
+        }
+
+        .letter-full::-webkit-scrollbar-thumb {
+            background-color: #cbd2da;
+            border-radius: 12px;
+        }
+
+        /* ===== 花纹装饰 (固定，不干扰滑动) ===== */
+        .stamp-decoration {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            width: 70px;
+            height: 70px;
+            border: 2px dashed rgba(170, 140, 110, 0.3);
+            border-radius: 50% 20% 50% 20%;
+            transform: rotate(-8deg);
+            pointer-events: none;
+            z-index: 10;
+            background: rgba(240, 230, 215, 0.2);
+            backdrop-filter: blur(1px);
+            box-shadow: 0 0 0 1px rgba(190, 160, 130, 0.15) inset;
+        }
+
+        .stamp-decoration::after {
+            content: "✧ 信件 ✧";
+            position: absolute;
+            bottom: -24px;
+            right: -10px;
+            font-size: 12px;
+            color: #bba88b;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            opacity: 0.5;
+            transform: rotate(-4deg);
+        }
+
+
+        .perforation {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 100px;
+            height: 100px;
+            background-image: radial-gradient(circle at 20% 40%, #e6d7c0 3px, transparent 4px);
+            background-size: 20px 20px;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 8;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+
+        .print-note {
+            position: fixed;
+            bottom: 12px;
+            left: 16px;
+            font-size: 12px;
+            color: #bcb0a0;
+            background: rgba(255, 250, 240, 0.7);
+            backdrop-filter: blur(2px);
+            padding: 4px 14px;
+            border-radius: 40px;
+            border: 0.5px solid #ddd2c2;
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            z-index: 15;
+            letter-spacing: 0.3px;
+            pointer-events: none;
+        }
+
+        /* ===== 按钮样式 (信纸内部) ===== */
+        .play-audio-btn {
+            display: block;
+            width: fit-content;
+            margin: 2.2rem auto 1.2rem auto;
+            /* 与行高呼应 */
+            padding: 0.9rem 2.2rem;
+            background: rgba(255, 245, 235, 0.85);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(190, 165, 140, 0.4);
+            border-radius: 60px;
+            box-shadow: 0 4px 12px rgba(140, 110, 80, 0.08);
+            font-family: 'Courier New', 'Cutive Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #4d3a28;
+            letter-spacing: 0.08em;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .play-audio-btn:hover {
+            background: rgba(245, 230, 215, 0.95);
+            border-color: #b89b82;
+            box-shadow: 0 6px 14px rgba(120, 90, 60, 0.12);
+        }
+
+        .play-audio-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* 音频控件统一样式 (使其融入信纸) */
+        audio {
+            display: block;
+            width: 100%;
+            margin: 1.8rem 0 1rem 0;
+            border-radius: 36px;
+            background: rgba(250, 240, 230, 0.7);
+            box-shadow: 0 2px 8px rgba(160, 130, 100, 0.1);
+            border: 1px solid #e4d6c8;
+            outline: none;
+        }
+
+        /* 确保音频控件高度不影响行线 (无背景线穿过) */
+    </style>
+</head>
+
+<body>
+    <!-- 全屏信件容器（横线背景 + 逐字打印内容） -->
+    <div class="letter-full" id="letterContent"></div>
+
+    <!-- 固定装饰 (不参与滚动) -->
+    <div class="stamp-decoration" aria-hidden="true"></div>
+    <div class="perforation" aria-hidden="true"></div>
+    <div class="wax-seal" aria-hidden="true"></div>
+    <div class="print-note">致我爱的人</div>
+
+    <script>
+        (function () {
+            // ----------  ✉️ 指定文字内容 (包含段落、空格，与横线对齐) ----------
+            const letterText = `亲爱的王婧怡：
+
+    晚上好哇！
+
+    我没有特意躲着你，这几天中午和下午在做这个甚至是上课，有些话当面说不出口，就想到以这种展示给你，不至于我笨拙的嘴表达不出我心底的声音。
+
+    你虽然说没事没事，但我明显可以感觉到你对我的冷淡，排斥我的靠近。我不知道我是应该给你一些空间，还是继续黏着你，我担心我不作为，你就会离我而去。虽然你不说我也知道我那天的做法让你很介意，我仔细想了想，我也不喜欢我喜欢的人在异性甚至是讨厌的人面前献殷勤。我当时没有站在你的角度去考虑，我现在已经知道了我的的错误，我一定在不得罪人的情况下和异性保持距离。
+
+    下午看到你又闷闷不乐，我回想我的做法的话，我在你发消息的时候去打扰你了，我也不喜欢这种感觉，我中午在编辑这个的时候la非要看，我当时想干死他。我当时没有想到，我脑子里只剩贴贴了。我意识到的时候你应该已经对我产生厌恶了，我以后不会在你发消息时去打扰你了。
+
+    我知道你在我这受了很多委屈。很多时候我关注不到你的情绪变化，我从小听着  男子汉大丈夫流血不流泪  长大，我不太会哄人，也不太知道怎么接住你的情绪。我习惯了什么事都自己扛，不麻烦别人，也不相信别人。时间长了，我觉得很多事都是小事，你分享给我的很多事情，我第一反应也是  没什么大不了  ……我知道这让你很累。
+
+    我有在慢慢改，我真的不是无可救药。我想要和你在一起！
+
+    我虽然经历过很多事，情关也是第一次遇到。你可以牵着我的手，和我一起走吗？
+	                2026/3/7
+                         赵毅文`;
+
+            // 容器
+            const container = document.getElementById('letterContent');
+
+            // 清空 (保证初始状态)
+            container.innerHTML = '';     // 使用 innerHTML 而不是 textContent 便于以后扩展，但也会清空所有
+
+            // 转为字符数组 (保留所有字符，包括换行符)
+            const chars = Array.from(letterText);
+
+            // 打印机配置
+            let index = 0;
+            const typingSpeed = 70;       // 每字符70ms
+            let timer = null;
+
+            // ----- 显示“点击听音频”按钮 (仅在打印完成后且不存在时) -----
+            function showAudioButton() {
+                // 避免重复插入按钮 (同时确保没有音频控件，如果有音频说明已经替换过)
+                if (document.querySelector('.play-audio-btn')) return;
+                if (document.querySelector('audio')) return;   // 已经存在音频播放器，不再显示按钮
+
+                const btn = document.createElement('button');
+                btn.className = 'play-audio-btn';
+                btn.textContent = '听嘴笨语音版';
+                // 添加到容器末尾
+                container.appendChild(btn);
+
+                // 点击按钮: 移除按钮 → 创建audio → 尝试自动播放
+                btn.addEventListener('click', function onClick(e) {
+                    e.stopPropagation();
+                    // 移除自身
+                    btn.remove();
+
+                    // 创建audio元素
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = './01.mp3'; // 可靠的小mp3示例
+                    // 可选添加样式类，已在全局定义
+                    audio.style.width = '100%';
+                    audio.style.marginTop = '1.5rem';
+                    audio.style.marginBottom = '1rem';
+
+                    // 插入到容器中原按钮的位置(现在btn已被移除，直接append即可)
+                    container.appendChild(audio);
+
+                    // 尝试自动播放 (用户点击按钮属于手势，大多数浏览器允许)
+                    audio.play().catch(err => {
+                        console.log('自动播放受阻，用户需手动点击播放', err);
+                        // 静默失败，控件还在，用户可手动点播放
+                    });
+                });
+            }
+
+            // ----- 逐字追加 (不覆盖现有子节点) -----
+            function typeNextChar() {
+                if (index < chars.length) {
+                    // 使用 insertAdjacentText 在末尾追加文本，不影响已经存在的按钮/音频
+                    container.insertAdjacentText('beforeend', chars[index]);
+                    index++;
+                } else {
+                    // 打印完成
+                    if (timer) {
+                        clearInterval(timer);
+                        timer = null;
+                    }
+                    // 显示音频按钮
+                    showAudioButton();
+                }
+            }
+
+            // ----- 启动打印机 (重置所有内容) -----
+            function startPrinting() {
+                // 清除之前的定时器
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+                // 完全清空容器 (移除所有文本、按钮、音频)
+                container.innerHTML = '';     // 干净如初
+                index = 0;
+                timer = setInterval(typeNextChar, typingSpeed);
+            }
+
+            // 页面加载后开始逐字打印
+            window.addEventListener('load', startPrinting);
+
+            // 双击信纸任意处 → 重置打印 (清空并重新开始)
+            container.addEventListener('dblclick', function (e) {
+                e.stopPropagation();
+                startPrinting();
+            });
+
+            // 可选：如果用户希望重置，双击即可。为避免与单击误触，延迟无影响。
+        })();
+    </script>
+    <!-- 备注：音频文件地址是公开测试资源，如有需要可替换为真实mp3 -->
+</body>
+
+</html>
