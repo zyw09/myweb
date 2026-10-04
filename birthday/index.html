@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#FFFBF7" />
+<title>小惊喜 🎂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FFFBF7;
+    --pink:#FFD1DC;
+    --pink-deep:#FFB3C6;
+    --pink-soft:#FFEAF0;
+    --blue:#AEC6CF;
+    --mint:#B7E4C7;
+    --text:#4A4A4A;
+    --text-soft:#9A8A90;
+    --line:#FFE3EA;
+    --radius:34px;
+    --shadow:0 22px 50px -22px rgba(255,150,185,.65);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    padding:76px clamp(14px,4vw,24px) clamp(30px,6vw,56px);
+    font-family:'Quicksand','Nunito','Noto Sans SC',ui-rounded,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(900px 600px at 12% -10%, #FFF1F5 0%, rgba(255,241,245,0) 60%),
+      radial-gradient(800px 620px at 100% 0%, #EEF6F7 0%, rgba(238,246,247,0) 55%),
+      radial-gradient(760px 620px at 50% 118%, #EFF9F1 0%, rgba(239,249,241,0) 60%),
+      var(--bg);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+
+  /* ---------- 背景装饰 ---------- */
+  .bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  .petal{
+    position:absolute;top:0;left:0;
+    will-change:transform;
+    animation-name:fall;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+    filter:drop-shadow(0 4px 6px rgba(255,170,200,.18));
+  }
+  @keyframes fall{
+    0%{transform:translate3d(0,-14vh,0) rotate(0deg)}
+    100%{transform:translate3d(var(--drift,40px),114vh,0) rotate(420deg)}
+  }
+  .blob{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55}
+  .blob-1{width:320px;height:320px;left:-90px;top:-60px;background:#FFD9E4;animation:drift1 18s ease-in-out infinite}
+  .blob-2{width:280px;height:280px;right:-100px;top:22%;background:#D6EAF0;animation:drift2 22s ease-in-out infinite}
+  .blob-3{width:340px;height:340px;left:38%;bottom:-140px;background:#D9F2E2;animation:drift3 26s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(26px,30px) scale(1.08)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30px,24px) scale(1.1)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,-26px) scale(1.06)}}
+
+  /* ---------- 舞台 / 卡片 ---------- */
+  .stage{position:relative;z-index:2;width:100%;max-width:620px;margin:auto}
+  .screen{display:none;width:100%}
+  .screen.active{display:block;animation:screenIn .6s cubic-bezier(.22,1,.36,1) both}
+  @keyframes screenIn{from{opacity:0;transform:translateY(30px) scale(.965)}to{opacity:1;transform:none}}
+
+  .card{
+    position:relative;
+    overflow:hidden;
+    padding:clamp(22px,5.5vw,42px);
+    border-radius:var(--radius);
+    border:1.5px solid var(--line);
+    background:linear-gradient(180deg,#FFFFFF 0%,#FFF9FB 100%);
+    box-shadow:var(--shadow), 0 1px 0 rgba(255,255,255,.9) inset;
+  }
+  .card::after{
+    content:'';
+    position:absolute;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(140px 90px at 102% -4%, rgba(255,209,220,.5), rgba(255,209,220,0) 70%),
+               radial-gradient(120px 80px at -6% 104%, rgba(183,228,199,.4), rgba(183,228,199,0) 70%);
+  }
+  .card > *{position:relative;z-index:1}
+  .brand{
+    display:inline-flex;align-items:center;gap:8px;
+    font-weight:800;font-size:clamp(14px,3.6vw,16px);
+    letter-spacing:.4px;color:#C97B95;
+  }
+  .brand .heart{animation:beat 1.7s ease-in-out infinite;display:inline-block}
+  @keyframes beat{0%,100%{transform:scale(1)}18%{transform:scale(1.22)}36%{transform:scale(.98)}54%{transform:scale(1.12)}}
+
+  .top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .badge{
+    display:inline-block;
+    padding:7px 15px;border-radius:999px;
+    font-size:12.5px;font-weight:800;letter-spacing:.6px;
+    color:#B4718C;background:var(--pink-soft);
+    border:1px solid #FFDCE6;
+  }
+  .dots{display:flex;align-items:center;gap:7px}
+  .dot{width:9px;height:9px;border-radius:50%;background:#FFE6ED;transition:all .38s cubic-bezier(.34,1.56,.64,1)}
+  .dot.on{width:26px;border-radius:999px;background:linear-gradient(90deg,var(--pink-deep),var(--pink))}
+  .dot.done{background:var(--mint)}
+
+  .question{
+    margin:6px 0 10px;
+    font-size:clamp(19px,4.9vw,24px);
+    font-weight:700;line-height:1.62;letter-spacing:.3px;
+  }
+  .sub{margin:0 0 22px;font-size:13.5px;font-weight:600;color:var(--text-soft);line-height:1.7}
+  .field{display:flex;flex-direction:column;gap:13px}
+  .input{
+    width:100%;padding:16px 20px;
+    font-family:inherit;font-size:17px;font-weight:700;color:var(--text);
+    border-radius:22px;border:2px solid var(--line);background:#FFFDFE;
+    outline:none;-webkit-appearance:none;
+    transition:border-color .26s,box-shadow .26s,background .26s;
+  }
+  .input::placeholder{color:#DCC8CF;font-weight:600}
+  .input:focus{border-color:var(--pink-deep);background:#fff;box-shadow:0 0 0 5px rgba(255,209,220,.42)}
+  .shake{animation:shake .46s cubic-bezier(.36,.07,.19,.97)}
+  @keyframes shake{0%,100%{transform:translateX(0)}18%{transform:translateX(-9px)}38%{transform:translateX(8px)}58%{transform:translateX(-6px)}78%{transform:translateX(4px)}}
+  .hint{
+    min-height:22px;margin:14px 0 0;
+    font-size:14px;font-weight:800;color:#E4738F;
+    opacity:0;transform:translateY(-4px);transition:opacity .26s,transform .26s;
+  }
+  .hint.show{opacity:1;transform:none}
+
+  .btn{
+    position:relative;overflow:hidden;
+    width:100%;padding:16px 26px;
+    border:none;cursor:pointer;
+    font-family:inherit;font-weight:800;letter-spacing:.8px;
+    font-size:clamp(15px,4vw,17px);color:#79515F;
+    border-radius:999px;
+    background:linear-gradient(135deg,#FFE6ED 0%,var(--pink) 52%,#FFC2D5 100%);
+    box-shadow:0 14px 26px -13px rgba(255,138,176,.95), 0 2px 0 rgba(255,255,255,.85) inset;
+    transition:transform .24s cubic-bezier(.22,1,.36,1),box-shadow .24s,filter .24s;
+  }
+  .btn::after{
+    content:'';position:absolute;top:0;left:-140%;width:60%;height:100%;
+    background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));
+    transform:skewX(-18deg);
+  }
+  .btn:hover{transform:translateY(-4px);box-shadow:0 22px 32px -15px rgba(255,126,168,1);filter:saturate(1.06)}
+  .btn:hover::after{animation:shine .9s ease}
+  .btn:active{transform:translateY(-1px) scale(.985)}
+  @keyframes shine{from{left:-140%}to{left:150%}}
+  .btn.mint{background:linear-gradient(135deg,#E4F7EC 0%,var(--mint) 55%,#A4DBB9 100%);color:#3F6B53;box-shadow:0 14px 26px -13px rgba(120,200,160,.95),0 2px 0 rgba(255,255,255,.85) inset}
+  .btn.ghost{
+    width:auto;padding:11px 22px;font-size:14px;letter-spacing:.5px;
+    color:#A98698;background:#FFF6F9;border:1.5px solid var(--line);
+    box-shadow:none;
+  }
+  .btn.ghost:hover{transform:translateY(-3px);box-shadow:0 12px 22px -14px rgba(255,150,185,.9)}
+
+  /* ---------- 弹窗 ---------- */
+  .overlay{
+    position:fixed;inset:0;z-index:60;
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+    background:rgba(74,74,74,.34);
+    -webkit-backdrop-filter:blur(7px) saturate(1.15);
+    backdrop-filter:blur(7px) saturate(1.15);
+    opacity:0;pointer-events:none;transition:opacity .3s ease;
+  }
+  .overlay.show{opacity:1;pointer-events:auto}
+  .modal{
+    width:min(440px,100%);
+    max-height:88vh;overflow-y:auto;
+    padding:clamp(24px,6vw,38px);
+    text-align:center;
+    border-radius:32px;border:1.5px solid var(--line);
+    background:linear-gradient(180deg,#FFFFFF,#FFF6FA);
+    box-shadow:0 34px 70px -26px rgba(180,110,140,.75);
+    transform:scale(.82) translateY(16px);opacity:0;
+    transition:transform .46s cubic-bezier(.34,1.56,.64,1),opacity .32s ease;
+  }
+  .overlay.show .modal{transform:scale(1) translateY(0);opacity:1}
+  .modal-emoji{font-size:clamp(38px,11vw,52px);line-height:1;animation:pop 1.4s ease-in-out infinite}
+  @keyframes pop{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.14) rotate(4deg)}}
+  .modal-title{margin:14px 0 8px;font-size:clamp(20px,5.4vw,25px);font-weight:800;letter-spacing:.6px}
+  .modal-text{margin:0;font-size:clamp(15px,4.2vw,17px);font-weight:600;line-height:1.8;color:#6E5C63}
+  .voice{
+    display:none;width:100%;margin:18px 0 0;padding:13px 16px;
+    text-align:left;font-family:inherit;color:#3F6B53;
+    border-radius:20px;border:1.5px solid #CDEEDC;background:linear-gradient(135deg,#EFFAF3,#DCF3E6);
+    box-shadow:0 10px 20px -14px rgba(120,200,160,.9);
+    transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s;
+  }
+  .voice.show{display:flex;align-items:center;gap:11px;animation:screenIn .5s .12s cubic-bezier(.22,1,.36,1) both}
+  .voice-icon{font-size:19px}
+  .voice b{display:block;font-size:11.5px;letter-spacing:1px;font-weight:800;color:#7FAE93;margin-bottom:2px}
+  .voice-body{font-size:14.5px;font-weight:700;line-height:1.5}
+  .voice-tip{margin:12px 2px 0;font-size:13.5px;font-weight:700;color:#8A9AA6;line-height:1.65}
+  .modal-actions{margin-top:22px}
+
+  /* ---------- 最终页 ---------- */
+  .final-card{text-align:center}
+  .cake{font-size:clamp(40px,12vw,58px);line-height:1;animation:bounceCake 2.4s ease-in-out infinite}
+  @keyframes bounceCake{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+  .final-title{
+    margin:10px 0 22px;font-size:clamp(22px,6vw,29px);font-weight:800;letter-spacing:2px;
+    background:linear-gradient(100deg,#FF9EBB,#FFC2D5 40%,#A9CBD6 78%,#8FCFAC);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .final-text{
+    margin:0;text-align:left;
+    font-size:clamp(16.5px,4.5vw,20px);font-weight:500;line-height:2.05;letter-spacing:.3px;
+  }
+  .final-text .ch{opacity:0;display:inline-block;will-change:transform,opacity;animation:chIn .58s cubic-bezier(.22,1,.36,1) forwards}
+  @keyframes chIn{from{opacity:0;transform:translateY(9px) scale(.86)}to{opacity:1;transform:none}}
+  .caret{display:inline-block;width:2px;height:1.05em;margin-left:2px;vertical-align:-.16em;background:var(--pink-deep);border-radius:2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  #fireworks{position:fixed;inset:0;z-index:40;pointer-events:none}
+
+  @media (max-width:420px){
+    :root{--radius:28px}
+    .card{padding:22px 18px 24px}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <span class="blob blob-1"></span>
+  <span class="blob blob-2"></span>
+  <span class="blob blob-3"></span>
+  <div id="petals"></div>
+</div>
+
+<main class="stage">
+
+  <!-- 身份验证 -->
+  <section class="screen active" id="screen-auth">
+    <div class="card">
+      <div class="brand"><span class="heart">💗</span>小惊喜</div>
+      <div class="top-row">
+        <span class="badge" id="authBadge">第 1 关 · 共 4 关</span>
+        <div class="dots" id="authDots"></div>
+      </div>
+      <h1 class="question" id="authQuestion"></h1>
+      <p class="sub" id="authHint"></p>
+      <div class="field">
+        <input class="input" id="authInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="在这里写下答案…" />
+        <button class="btn" id="authSubmit" type="button">确认 ✨</button>
+      </div>
+      <p class="hint" id="authMsg" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- 问题环节 -->
+  <section class="screen" id="screen-quiz">
+    <div class="card">
+      <div class="brand"><span class="heart">🧩</span>问题环节</div>
+      <div class="top-row">
+        <span class="badge" id="quizBadge">第 1 题 · 共 4 题</span>
+        <div class="dots" id="quizDots"></div>
+      </div>
+      <h1 class="question" id="quizQuestion"></h1>
+      <p class="sub">没有次数限制，答对了才能进入下一题哦～</p>
+      <div class="field">
+        <input class="input" id="quizInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="写下你的答案…" />
+        <button class="btn" id="quizSubmit" type="button">提交答案 💡</button>
+      </div>
+      <p class="hint" id="quizMsg" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- 最终页 -->
+  <section class="screen" id="screen-final">
+    <div class="card final-card">
+      <div class="cake">🎂</div>
+      <h1 class="final-title">生日快乐</h1>
+      <p class="final-text" id="finalText"></p>
+    </div>
+  </section>
+
+</main>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-emoji" id="modalEmoji">💖</div>
+    <h2 class="modal-title" id="modalTitle">身份确认</h2>
+    <p class="modal-text" id="modalText"></p>
+    <div class="voice" id="modalVoice">
+      <span class="voice-icon">💬</span>
+      <span class="voice-body"><b>语音词</b><span id="modalVoiceLabel"></span></span>
+    </div>
+    <p class="voice-tip" id="modalTip"></p>
+    <div class="modal-actions">
+      <button class="btn" id="modalBtn" type="button">好的</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ========================================================
+     一、数据区（所有答案都写在前端）
+     ======================================================== */
+
+  var AUTH = [
+    { q:'Yi的老婆叫什么（三个字）', hint:'悄悄提示：是个很温柔的名字', answers:['王婧怡','wangjingyi','wang jing yi'] },
+    { q:'她喜欢的明星是谁', hint:'提示：三个字哦！', answers:['王一博','wangyibo','wang yi bo'] },
+    { q:'她的生日是什么时候（四个数字）', hint:'提示：四个数字，例如 0520', answers:['1202','12月2日','12月02日','12.02','12/02','12-02','12 02','122'] },
+    { q:'Yi的真名是什么', hint:'提示：三个字哦！', answers:['赵毅文','zhaoyiwen','zhao yi wen'] }
+  ];
+
+  var QUIZ = [
+    {
+      q:'小明的作文本丢了，他急得满教室喊：“找一文！找一文！”老师听见后，却在花名册上写了一个名字。请问老师写的是谁？',
+      answers:['赵毅文','zhaoyiwen','zhao yi wen'],
+      emoji:'🎉',
+      pop:'哇塞！哇塞！这是谁家的小宝这么聪明，不过不要大意后面很难哦！',
+      voice:'赵毅文',
+      tip:'去试试吧'
+    },
+    {
+      q:'什么“子”不是儿子，但人人都想找？',
+      answers:['乐子','找乐子','lezi','le zi'],
+      emoji:'🌟',
+      pop:'我的天！这么厉害连对两题，太厉害啦！',
+      voice:'乐子',
+      tip:'要先唤醒哦！喊 王一博/赵毅文唤醒'
+    },
+    {
+      q:'“木目心上坐，人尔并肩行；我在前头走，了字后面跟。”打一四个字的话。',
+      answers:['我想你了','woxiangnile','wo xiang ni le'],
+      emoji:'🏆',
+      pop:'三杀了唉！根本没有难住你，在世诸葛亮哇！',
+      voice:'我想你了',
+      tip:'快去试试吧！'
+    },
+    {
+      q:'小赵很坚毅，又有文化。有一天，他给喜欢的人发了一串字母：ZYWWAN。对方一看就懂了，脸都红了。请问这串字母是什么意思？',
+      answers:['赵毅文我爱你','zywwan我爱你','zywwanwoaini','zhaoyiwenwoaini','zhao yi wen wo ai ni'],
+      emoji:'💐',
+      pop:'什么！居然这么快就通关了，没想到你这么厉害哇！太棒啦！',
+      voice:'赵毅文我爱你',
+      tip:'快去试试吧！'
+    }
+  ];
+
+  var FINAL_TEXT = '哇塞！首先祝贺王婧怡小朋友生日快乐，同时也祝贺咱们小朋友这么快就通过这个小游戏，真是太棒了哇！祝王婧怡小朋友明天开开心心万事如意，愿你新的一岁，有底气拒绝，有能力选择，有运气相遇，有勇气告别。愿你被爱，也不吝于爱；愿你清醒，也允许自己偶尔沉醉。愿所有努力都指向自由，所有等待都值得奔赴。生日快乐。';
+
+  /* ========================================================
+     二、工具函数
+     ======================================================== */
+
+  // 忽略大小写、空格、标点符号（含全角）
+  function normalize(value){
+    return String(value == null ? '' : value)
+      .normalize('NFKC')
+      .toLowerCase()
+      .replace(/\s+/g,'')
+      .replace(/[\p{P}\p{S}]/gu,'');
+  }
+
+  function isRight(answerList, value){
+    var n = normalize(value);
+    if(!n){ return false; }
+    for(var i = 0; i < answerList.length; i++){
+      if(normalize(answerList[i]) === n){ return true; }
+    }
+    return false;
+  }
+
+  function $(id){ return document.getElementById(id); }
+
+  function renderDots(box, currentIndex, allDone){
+    if(!box){ return; }
+    box.innerHTML = '';
+    for(var i = 0; i < 4; i++){
+      var d = document.createElement('span');
+      d.className = 'dot';
+      if(allDone || i < currentIndex){ d.className += ' done'; }
+      else if(i === currentIndex){ d.className += ' on'; }
+      box.appendChild(d);
+    }
+  }
+
+  function showScreen(id){
+    var all = document.querySelectorAll('.screen');
+    for(var i = 0; i < all.length; i++){
+      all[i].classList.toggle('active', all[i].id === id);
+    }
+    try{ window.scrollTo({ top:0, behavior:'smooth' }); }catch(e){ window.scrollTo(0,0); }
+  }
+
+  function shake(el){
+    if(!el){ return; }
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+  }
+
+  /* ========================================================
+     四、自定义弹窗
+     ======================================================== */
+
+  var overlay = $('overlay');
+  var modalEmoji = $('modalEmoji');
+  var modalTitle = $('modalTitle');
+  var modalText = $('modalText');
+  var modalVoice = $('modalVoice');
+  var modalVoiceLabel = $('modalVoiceLabel');
+  var modalTip = $('modalTip');
+  var modalBtn = $('modalBtn');
+
+  var locked = false;
+  var currentAction = null;
+
+  function openModal(opt){
+    locked = true;
+    modalEmoji.textContent = opt.emoji || '💗';
+    modalTitle.textContent = opt.title || '';
+    modalText.textContent = opt.text || '';
+    modalText.style.display = opt.text ? '' : 'none';
+    var voiceText = opt.voice || '';
+    if(voiceText){
+      modalVoiceLabel.textContent = voiceText;
+      modalVoice.classList.add('show');
+    } else {
+      modalVoice.classList.remove('show');
+      modalVoiceLabel.textContent = '';
+    }
+    modalTip.textContent = opt.tip || '';
+    modalTip.style.display = opt.tip ? '' : 'none';
+    modalBtn.textContent = opt.button || '好的';
+    currentAction = opt.onButton || null;
+    overlay.classList.add('show');
+    setTimeout(function(){
+      try{ modalBtn.focus({ preventScroll:true }); }catch(e){}
+    }, 380);
+  }
+
+  function closeModal(){
+    overlay.classList.remove('show');
+    locked = false;
+    currentAction = null;
+  }
+
+  modalBtn.addEventListener('click', function(){
+    var fn = currentAction;
+    if(fn){ fn(); } else { closeModal(); }
+  });
+
+  /* ========================================================
+     五、身份验证环节
+     ======================================================== */
+
+  var authIndex = 0;
+  var authBadge = $('authBadge');
+  var authQuestion = $('authQuestion');
+  var authHint = $('authHint');
+  var authInput = $('authInput');
+  var authMsg = $('authMsg');
+  var authDots = $('authDots');
+
+  function renderAuth(){
+    var step = AUTH[authIndex];
+    authBadge.textContent = '第 ' + (authIndex + 1) + ' 关 · 共 4 关';
+    authQuestion.textContent = step.q;
+    authHint.textContent = step.hint || '';
+    authInput.value = '';
+    authMsg.textContent = '';
+    authMsg.classList.remove('show');
+    renderDots(authDots, authIndex, false);
+    setTimeout(function(){ try{ authInput.focus(); }catch(e){} }, 240);
+  }
+
+  function resetAuth(){
+    authIndex = 0;
+    renderAuth();
+  }
+
+  function submitAuth(){
+    if(locked){ return; }
+    var value = authInput.value;
+    if(!value.trim()){
+      authMsg.textContent = '先写下答案，再按确认呀～';
+      authMsg.classList.add('show');
+      shake(authInput);
+      return;
+    }
+    if(isRight(AUTH[authIndex].answers, value)){
+      authIndex++;
+      if(authIndex >= AUTH.length){
+        openModal({
+          emoji:'💖',
+          title:'身份确认',
+          text:'是你呀，我一直在等你。',
+          button:'进入问题环节',
+          onButton:function(){
+            closeModal();
+            setTimeout(startQuiz, 300);
+          }
+        });
+      } else {
+        renderAuth();
+      }
+    } else {
+      openModal({
+        emoji:'🥺',
+        title:'你不是她',
+        text:'答案不对哦，我们从第一个问题重新来一次吧。',
+        button:'重新开始',
+        onButton:function(){
+          closeModal();
+          resetAuth();
+        }
+      });
+    }
+  }
+
+  $('authSubmit').addEventListener('click', submitAuth);
+  authInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); submitAuth(); }
+  });
+
+  /* ========================================================
+     六、问题环节
+     ======================================================== */
+
+  var quizIndex = 0;
+  var quizBadge = $('quizBadge');
+  var quizQuestion = $('quizQuestion');
+  var quizInput = $('quizInput');
+  var quizMsg = $('quizMsg');
+  var quizDots = $('quizDots');
+
+  function startQuiz(){
+    quizIndex = 0;
+    showScreen('screen-quiz');
+    renderQuiz();
+  }
+
+  function renderQuiz(){
+    var item = QUIZ[quizIndex];
+    quizBadge.textContent = '第 ' + (quizIndex + 1) + ' 题 · 共 4 题';
+    quizQuestion.textContent = item.q;
+    quizInput.value = '';
+    quizMsg.textContent = '';
+    quizMsg.classList.remove('show');
+    renderDots(quizDots, quizIndex, false);
+    setTimeout(function(){ try{ quizInput.focus(); }catch(e){} }, 240);
+  }
+
+  function submitQuiz(){
+    if(locked){ return; }
+    var item = QUIZ[quizIndex];
+    var value = quizInput.value;
+    if(isRight(item.answers, value)){
+      var isLast = (quizIndex === QUIZ.length - 1);
+      renderDots(quizDots, quizIndex, true);
+      quizMsg.classList.remove('show');
+      openModal({
+        emoji:item.emoji,
+        title:'第 ' + (quizIndex + 1) + ' 题 · 答对啦',
+        text:item.pop,
+        voice:item.voice,
+        tip:item.tip,
+        button:'挑战更高级的BOSS！',
+        onButton:function(){
+          closeModal();
+          if(isLast){
+            setTimeout(goFinal, 300);
+          } else {
+            quizIndex++;
+            setTimeout(renderQuiz, 300);
+          }
+        }
+      });
+    } else {
+      // 答错：保留输入框里的内容，不清空
+      quizMsg.textContent = '答错了，再想想';
+      quizMsg.classList.add('show');
+      shake(quizInput);
+      try{ quizInput.focus(); }catch(e){}
+    }
+  }
+
+  $('quizSubmit').addEventListener('click', submitQuiz);
+  quizInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); submitQuiz(); }
+  });
+
+  /* ========================================================
+     七、最终页：逐字淡入
+     ======================================================== */
+
+  var typed = false;
+
+  function goFinal(){
+    showScreen('screen-final');
+    if(!typed){
+      typed = true;
+      startTyping();
+    }
+  }
+
+  function startTyping(){
+    var box = $('finalText');
+    if(!box){ return; }
+    box.innerHTML = '';
+    var caret = document.createElement('i');
+    caret.className = 'caret';
+    box.appendChild(caret);
+
+    var chars = Array.from(FINAL_TEXT);
+    var i = 0;
+
+    function step(){
+      if(i >= chars.length){
+        // 全部显示完：收起光标，等 2 秒后放烟花
+        setTimeout(function(){
+          if(caret.parentNode){ caret.parentNode.removeChild(caret); }
+        }, 900);
+        setTimeout(startFireworks, 2000);
+        return;
+      }
+      var ch = chars[i++];
+      var span = document.createElement('span');
+      span.className = 'ch';
+      span.textContent = ch;
+      box.insertBefore(span, caret);
+
+      var delay = 120;                              // 每字间隔（毫秒），数字越大越慢
+      if(/[，。！；：、]/.test(ch)){ delay = 480; }    // 标点处多停一下
+      else if(/[,.!;:]/.test(ch)){ delay = 360; }
+      setTimeout(step, delay);
+    }
+    setTimeout(step, 520);
+  }
+
+  /* ========================================================
+     八、背景飘落装饰
+     ======================================================== */
+
+  (function makePetals(){
+    var box = $('petals');
+    if(!box){ return; }
+    var icons = ['🌸','💗','✨','🎀','🤍','🍃','💕'];
+    var count = window.innerWidth < 600 ? 11 : 18;
+    for(var i = 0; i < count; i++){
+      var s = document.createElement('span');
+      s.className = 'petal';
+      s.textContent = icons[i % icons.length];
+      s.style.left = (Math.random() * 100) + '%';
+      s.style.fontSize = (12 + Math.random() * 16) + 'px';
+      s.style.animationDuration = (9 + Math.random() * 11) + 's';
+      s.style.animationDelay = (-Math.random() * 18) + 's';
+      s.style.opacity = (0.3 + Math.random() * 0.45).toFixed(2);
+      s.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
+      box.appendChild(s);
+    }
+  })();
+
+  /* ========================================================
+     九、烟花特效（最终页 · 文字显示完 2 秒后开始）
+     ======================================================== */
+
+  var fireworksRunning = false;
+
+  function startFireworks(){
+    if(fireworksRunning){ return; }
+
+    var canvas = $('fireworks');
+    if(!canvas || !canvas.getContext){ return; }
+    var ctx = canvas.getContext('2d');
+    fireworksRunning = true;
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+    function resize(){
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // 粉彩配色，但加深了一档，保证在奶油色背景上看得清
+    var palettes = [
+      ['#FF6F91','#FF8FAB','#FFC2D5','#FFFFFF'],
+      ['#7FB3C8','#AEC6CF','#DCEBF1','#FFFFFF'],
+      ['#74C69D','#B7E4C7','#E4F7EC','#FFFFFF'],
+      ['#FFB347','#FFC978','#FFE9A8','#FFFFFF'],
+      ['#C9A7E8','#E3D2F5','#FFD1DC','#FFFFFF']
+    ];
+    var gravity = 0.055;   // 重力
+    var drag = 0.975;      // 空气阻力
+    var mobile = W < 600;
+    var maxSparks = mobile ? 620 : 1500;
+    var rockets = [];
+    var sparks = [];
+    var elapsed = 0;
+    var launchAcc = 0;
+    var last = 0;
+
+    function rand(a, b){ return a + Math.random() * (b - a); }
+
+    // 发射一枚火箭：用初速度决定能升多高
+    function launch(){
+      var palette = palettes[Math.floor(Math.random() * palettes.length)];
+      var targetY = rand(H * 0.10, H * 0.42);
+      rockets.push({
+        x: rand(W * 0.10, W * 0.90),
+        y: H + 10,
+        vx: rand(-0.3, 0.3),
+        vy: -Math.sqrt(2 * gravity * (H - targetY + 40)),
+        color: palette[0],
+        palette: palette,
+        size: rand(1.5, 2.4)
+      });
+    }
+
+    // 爆炸成放射状或环状的火花
+    function explode(x, y, palette){
+      var count = mobile ? Math.floor(rand(38, 56)) : Math.floor(rand(48, 76));
+      var power = rand(3.2, 5.6);
+      var ring = Math.random() < 0.35;
+      for(var i = 0; i < count; i++){
+        var angle = (Math.PI * 2 * i) / count + rand(-0.05, 0.05);
+        var speed = ring ? power * rand(0.9, 1) : power * Math.sqrt(rand(0.05, 1));
+        sparks.push({
+          x: x, y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color: palette[Math.floor(Math.random() * palette.length)],
+          life: 1,
+          decay: rand(0.008, 0.018),
+          size: rand(1.1, 2.3),
+          glow: false
+        });
+      }
+      sparks.push({ x:x, y:y, vx:0, vy:0, color:'#FFFFFF', life:1, decay:0.08, size: rand(5, 9), glow:true });
+    }
+
+    function loop(now){
+      now = now || 0;
+      var dt = last ? Math.min((now - last) / 16.67, 3) : 1;
+      last = now;
+      if(!(dt > 0)){ dt = 1; }
+      elapsed += dt / 60;
+
+      // 半透明擦除，留下拖尾
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = 'rgba(0,0,0,0.17)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'source-over';
+
+      // 发射节奏：前 22 秒热闹，之后慢慢安静下来
+      launchAcc += dt;
+      var interval = mobile ? 44 : 32;
+      if(elapsed > 22){ interval *= 2.6; }
+      if(launchAcc >= interval){ launchAcc = 0; launch(); }
+
+      // 升空
+      for(var i = rockets.length - 1; i >= 0; i--){
+        var r = rockets[i];
+        r.x += r.vx * dt;
+        r.y += r.vy * dt;
+        r.vy += gravity * dt;
+
+        ctx.globalAlpha = 0.9;
+        ctx.fillStyle = r.color;
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = '#FFF3DD';
+        ctx.beginPath();
+        ctx.arc(r.x, r.y + 4 * dt, r.size * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+
+        if(r.vy >= 0){ explode(r.x, r.y, r.palette); rockets.splice(i, 1); }
+      }
+
+      // 火花
+      for(var j = sparks.length - 1; j >= 0; j--){
+        var s = sparks[j];
+        s.vy += gravity * dt;
+        s.vx *= Math.pow(drag, dt);
+        s.vy *= Math.pow(drag, dt);
+        s.x += s.vx * dt;
+        s.y += s.vy * dt;
+        s.life -= s.decay * dt;
+        if(s.life <= 0 || s.y > H + 60){ sparks.splice(j, 1); continue; }
+
+        var a = Math.max(s.life, 0);
+        var rad = s.glow ? s.size * (s.life * 1.5 + 0.5) : s.size * (a * 0.9 + 0.35);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = a * 0.28;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, rad * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = a;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if(sparks.length > maxSparks){ sparks.splice(0, sparks.length - maxSparks); }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(loop);
+    }
+
+    // 一开场就先炸两朵，再连续发几发，免得刚点火时画面空空的
+    explode(rand(W * 0.25, W * 0.75), rand(H * 0.20, H * 0.38), palettes[1]);
+    explode(rand(W * 0.20, W * 0.80), rand(H * 0.18, H * 0.35), palettes[0]);
+    launch();
+    setTimeout(launch, 320);
+    setTimeout(launch, 700);
+
+    requestAnimationFrame(loop);
+  }
+
+  /* ========================================================
+     十、启动
+     ======================================================== */
+
+  renderAuth();
+  renderDots(quizDots, 0, false);
+})();
+</script>
+</body>
+</html>
