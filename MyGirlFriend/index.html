@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
+<title>加载中</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:#0b1020;
+    color:#eef2ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* 成功跳转时整页空白，什么都不显示 */
+  #box{display:none;max-width:440px;width:100%;text-align:center}
+  body.show #box{display:block}
+  .mark{
+    width:60px;height:60px;margin:0 auto 20px;border-radius:50%;
+    display:grid;place-items:center;
+    font-size:28px;font-weight:700;
+    background:rgba(255,95,122,.14);color:#ff5f7a;
+    border:1px solid rgba(255,255,255,.12);
+  }
+  h1{font-size:20px;margin:0 0 10px;font-weight:650;letter-spacing:.3px}
+  p{margin:0;color:#98a2c0;font-size:14px;line-height:1.75}
+  .url{
+    margin:18px 0 0;padding:10px 14px;border-radius:10px;
+    background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08);
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:12.5px;color:#c8d3f5;word-break:break-all;
+  }
+  .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  button{
+    appearance:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;
+    padding:10px 20px;border-radius:10px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.08);color:#eef2ff;
+  }
+  button.p{background:#5b8cff;border-color:transparent}
+</style>
+</head>
+<body>
+<div id="box">
+  <div class="mark">!</div>
+  <h1>网页暂未开启</h1>
+  <p id="tip">目标页面当前无法访问。</p>
+  <div class="url" id="urlBox"></div>
+  <div class="acts">
+    <button class="p" id="retry">重新检测</button>
+    <button id="still">仍然访问</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============ 只改这一行：粘贴你要跳转的网址 ============ */
+  var TARGET_URL = "http://127.0.0.1:8080/";
+  /* ====================================================== */
+
+  var CFG = {
+    grace: 400,    // 最长等待探测毫秒数，到点无条件跳
+    timeout: 1500  // 单次探测超时
+  };
+
+  var box    = document.getElementById("box");
+  var tip    = document.getElementById("tip");
+  var urlBox = document.getElementById("urlBox");
+  var TIPS = {
+    timeout:  "目标页面响应超时，可能正在维护中。",
+    offline:  "当前网络似乎已断开，请检查网络连接。",
+    network:  "目标地址无法连接，可能尚未上线或域名有误。",
+    notfound: "目标页面不存在，内容可能已下线或尚未发布。",
+    http:     "目标页面返回了错误状态，暂时无法访问。"
+  };
+
+  /* 只接受 http / https */
+  function normalize(raw) {
+    if (!raw) return "";
+    var s = String(raw).trim();
+    if (!s) return "";
+    if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(s)) s = "https://" + s.replace(/^\/+/, "");
+    try {
+      var u = new URL(s, location.href);
+      if (u.protocol !== "http:" && u.protocol !== "https:") return "";
+      return u.href;
+    } catch (e) { return ""; }
+  }
+
+  /* 可用性探测
+     同源  → 读真实状态码，404/410/5xx 判为未开启
+     跨域  → no-cors 探活，连不上 / 超时 判为未开启 */
+  function probe(url) {
+    return new Promise(function (resolve) {
+      var same = false;
+      try { same = new URL(url).origin === location.origin; } catch (e) {}
+      var ctrl = new AbortController();
+      var timer = setTimeout(function () { ctrl.abort(); }, CFG.timeout);
+      var opts = {
+        method: "GET", cache: "no-store", redirect: "follow",
+        credentials: "omit", referrerPolicy: "no-referrer", signal: ctrl.signal
+      };
+      if (!same) opts.mode = "no-cors";
+
+      fetch(url, opts).then(function (res) {
+        clearTimeout(timer);
+        if (same) {
+          var s = res.status;
+          var dead = s === 404 || s === 410 || s >= 500;
+          resolve(dead
+            ? { ok: false, reason: (s === 404 || s === 410) ? "notfound" : "http" }
+            : { ok: true });
+        } else {
+          resolve({ ok: true });
+        }
+      }).catch(function (err) {
+        clearTimeout(timer);
+        var aborted = err && (err.name === "AbortError" || err.name === "TimeoutError");
+        resolve({
+          ok: false,
+          reason: aborted ? "timeout" : (navigator.onLine === false ? "offline" : "network")
+        });
+      });
+    });
+  }
+
+  var TARGET = "";
+
+  function showFail(reason) {
+    document.title = "网页暂未开启";
+    tip.textContent = TIPS[reason] || "目标页面当前无法访问。";
+    box.style.display = "block";
+  }
+
+  function boot() {
+    TARGET = normalize(TARGET_URL);
+    if (!TARGET) {
+      document.title = "跳转地址未配置";
+      tip.textContent = "请在 HTML 顶部的 TARGET_URL 填写 http(s) 链接。";
+      urlBox.style.display = "none";
+      box.style.display = "block";
+      return;
+    }
+
+    box.style.display = "none";
+    urlBox.textContent = TARGET;
+
+    var done = false;
+    function go() {
+      if (done) return;
+      done = true;
+      clearTimeout(grace);
+      location.replace(TARGET);   // 不留历史，后退不会重复空跳
+    }
+    function fail(r) {
+      if (done) return;
+      done = true;
+      clearTimeout(grace);
+      showFail(r);
+    }
+
+    var grace = setTimeout(go, CFG.grace);   // 兜底：到点无条件跳
+    probe(TARGET).then(function (r) {
+      r.ok ? go() : fail(r.reason);
+    }, go);
+  }
+
+  document.getElementById("retry").addEventListener("click", boot);
+  document.getElementById("still").addEventListener("click", function () {
+    if (TARGET) location.replace(TARGET);
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>
