@@ -53,11 +53,6 @@
   <div class="mark">!</div>
   <h1>网页暂未开启</h1>
   <p id="tip">目标页面当前无法访问。</p>
-  <div class="url" id="urlBox"></div>
-  <div class="acts">
-    <button class="p" id="retry">重新检测</button>
-    <button id="still">仍然访问</button>
-  </div>
 </div>
 
 <script>
@@ -75,7 +70,10 @@
 
   var box    = document.getElementById("box");
   var tip    = document.getElementById("tip");
+  // 这些节点可能被移除，取值全部做空判断，删掉也不报错
   var urlBox = document.getElementById("urlBox");
+  var retry  = document.getElementById("retry");
+  var still  = document.getElementById("still");
   var TIPS = {
     timeout:  "目标页面响应超时，可能正在维护中。",
     offline:  "当前网络似乎已断开，请检查网络连接。",
@@ -138,22 +136,22 @@
 
   function showFail(reason) {
     document.title = "网页暂未开启";
-    tip.textContent = TIPS[reason] || "目标页面当前无法访问。";
-    box.style.display = "block";
+    if (tip) tip.textContent = TIPS[reason] || "目标页面当前无法访问。";
+    if (box) box.style.display = "block";
   }
 
   function boot() {
     TARGET = normalize(TARGET_URL);
     if (!TARGET) {
       document.title = "跳转地址未配置";
-      tip.textContent = "请在 HTML 顶部的 TARGET_URL 填写 http(s) 链接。";
-      urlBox.style.display = "none";
-      box.style.display = "block";
+      if (tip) tip.textContent = "请在 HTML 顶部的 TARGET_URL 填写 http(s) 链接。";
+      if (urlBox) urlBox.style.display = "none";
+      if (box) box.style.display = "block";
       return;
     }
 
-    box.style.display = "none";
-    urlBox.textContent = TARGET;
+    if (box) box.style.display = "none";
+    if (urlBox) urlBox.textContent = TARGET;
 
     var done = false;
     function go() {
@@ -175,8 +173,8 @@
     }, go);
   }
 
-  document.getElementById("retry").addEventListener("click", boot);
-  document.getElementById("still").addEventListener("click", function () {
+  if (retry) retry.addEventListener("click", boot);
+  if (still) still.addEventListener("click", function () {
     if (TARGET) location.replace(TARGET);
   });
 
